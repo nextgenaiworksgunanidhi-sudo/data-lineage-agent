@@ -1,400 +1,154 @@
 # Data Lineage Agent System
 
-A Claude Code-powered AI agent system that traces data attributes (e.g. `email`, `firstName`, `telephone`, `petName`) from database tables all the way back to the source application — REST APIs, Spring controllers, Thymeleaf forms, and JPA entities.
+A conversational data lineage tool built entirely with
+Claude Code skills and agents — no backend server,
+no separate API key needed beyond Claude Pro.
 
-The repository under analysis is **spring-petclinic** — a Spring Boot application (MySQL / H2 / PostgreSQL) with JPA, Thymeleaf, and REST controllers.
-
----
-
-## How It Works
-
-You ask a natural language question. The pipeline does the rest.
-
-```
-/lineage "trace firstName from database to source application"
-```
-
-The system runs an 11-step automated pipeline:
-
-```
-orchestrator
-    │
-    ├── db-scanner        ← finds attribute in DB schema + JPA entities
-    ├── sql-scanner       ← finds attribute in SQL files, triggers, views
-    ├── plpgsql-scanner   ← finds attribute in PL/pgSQL functions + procedures
-    ├── java-scanner      ← finds attribute in services, repos, controllers, batch jobs
-    ├── mapper-scanner    ← finds attribute in MapStruct / ModelMapper mappings
-    └── api-scanner       ← finds attribute in REST endpoints + forms
-            │
-          tracer          ← connects all findings into one labelled lineage chain
-            │
-         collector        ← merges paths, removes duplicates
-            │
-    ├── graph-output      ← ASCII visual diagram
-    ├── json-output       ← structured JSON lineage
-    └── report-output     ← full markdown report + saves 4 files to lineage-results/
-```
+Ask in plain English — get full data lineage traced
+from database sink back to source application.
 
 ---
 
-## Project Structure
+## What it does
 
-```
-data-lineage/
-├── CLAUDE.md                        # Project instructions for Claude
-├── README.md                        # This file
-│
-├── repo/
-│   └── spring-petclinic/            # Repository under analysis
-│       ├── src/main/java/           # Java Spring source code
-│       └── src/main/resources/      # SQL scripts, templates, config
-│
-├── ast-output/
-│   ├── java-ast.json                # Pre-parsed Java AST (entities, repos, controllers, batch)
-│   ├── sql-ast.json                 # Pre-parsed SQL AST (tables, columns, inserts)
-│   ├── plpgsql-ast.json             # Pre-parsed PL/pgSQL AST (functions, procedures, transforms)
-│   └── mapper-ast.json              # Pre-parsed mapper AST (MapStruct interfaces, ModelMapper calls)
-│
-├── tools/
-│   └── ast-scanner.py               # Python script that generates all 4 AST JSON files
-│
-├── lineage-results/                 # Saved lineage outputs (created by /lineage-save)
-│   └── <attribute>_<timestamp>/
-│       ├── lineage-report.md
-│       ├── lineage-graph.txt
-│       ├── lineage.json
-│       └── lineage-summary.txt
-│
-└── .claude/
-    ├── commands/
-    │   ├── lineage.md               # /lineage — full pipeline, output to screen
-    │   ├── lineage-save.md          # /lineage-save — full pipeline + save to files
-    │   ├── lineage-batch.md         # /lineage-batch — run /lineage-save for multiple attributes
-    │   ├── lineage-history.md       # /lineage-history — list all saved results
-    │   └── inventory.md             # /inventory — discover all traceable attributes
-    └── skills/
-        ├── orchestrator/            # Parses query, selects scanners
-        ├── db-scanner/              # Scans DB schema + JPA entities
-        ├── sql-scanner/             # Scans SQL files
-        ├── plpgsql-scanner/         # Scans PL/pgSQL functions and procedures
-        ├── java-scanner/            # Scans Java layer incl. Spring Batch components
-        ├── mapper-scanner/          # Scans MapStruct @Mapper interfaces + ModelMapper calls
-        ├── api-scanner/             # Scans REST + form endpoints
-        ├── tracer/                  # Builds the lineage chain with labelled edges
-        ├── collector/               # Merges and deduplicates paths
-        ├── graph-output/            # Renders ASCII diagram
-        ├── json-output/             # Produces JSON lineage
-        └── report-output/           # Produces markdown report + saves files
-```
+Traces any data attribute (firstName, telephone, email
+etc.) through a Java Spring + PL/SQL + PostgreSQL stack:
+
+  REST API → Spring Controller → Spring Service
+  → Spring Repository → JPA Entity → Database Column
+
+Shows every transformation, rename, type conversion
+and SQL function applied along the way.
 
 ---
 
-## Prerequisites
+## How it works
 
-### 1. Claude Code CLI
-
-```bash
-npm install -g @anthropic-ai/claude-code
-```
-
-### 2. Python dependencies (for AST scanner)
-
-```bash
-pip install javalang sqlglot
-```
+Built on Claude Code's skill and agent system:
+- Skills = atomic workers (db-scanner, java-scanner etc.)
+- Agents = orchestrators that call skills in combination
+- Commands = entry points (/lineage, /impact, /transforms)
+- AST scanner = pre-indexes the codebase once
 
 ---
 
 ## Setup
 
-### Step 1 — Clone this repository
-
+### 1. Clone this repo
 ```bash
-git clone <this-repo-url>
-cd data-lineage
+git clone https://github.com/YOUR-USERNAME/data-lineage-agent.git
+cd data-lineage-agent
 ```
 
-### Step 2 — (Optional) Regenerate the AST files
-
-The `ast-output/` folder already contains pre-built AST JSON files for spring-petclinic.
-If you modify the repo under analysis or want a fresh scan, regenerate them:
-
+### 2. Clone a repo to analyse
 ```bash
-python3 tools/ast-scanner.py
+git clone https://github.com/spring-petclinic/spring-petclinic repo/spring-petclinic
 ```
 
-This overwrites all four AST files:
-- `ast-output/java-ast.json` — entities, repos, controllers, Spring Batch components
-- `ast-output/sql-ast.json` — tables, columns, inserts (postgres dialect)
-- `ast-output/plpgsql-ast.json` — PL/pgSQL functions and procedures with transformations
-- `ast-output/mapper-ast.json` — MapStruct interfaces and ModelMapper call sites
-
-### Step 3 — Open Claude Code in this directory
-
+### 3. Install Python dependencies
 ```bash
-cd data-lineage
+pip install javalang sqlglot
+```
+
+### 4. Run the AST scanner (do this once)
+```bash
+python tools/ast-scanner.py
+```
+
+### 5. Launch Claude Code
+```bash
 claude
 ```
 
 ---
 
-## Usage
+## Available commands
 
-### `/lineage` — Trace any attribute (output to screen)
-
-```
-/lineage "your natural language query"
-```
-
-Runs the full 11-step pipeline and prints all results in the conversation.
-
-**Example queries:**
-
-```
-/lineage "trace firstName from database to source application"
-/lineage "trace owner email from database to source"
-/lineage "where does pet name originate?"
-/lineage "what writes to the owners table?"
-/lineage "trace telephone from REST API to database"
-/lineage "trace lastName sink to source"
-```
+| Command | Description |
+|---------|-------------|
+| `/inventory` | List all traceable attributes |
+| `/lineage "query"` | Trace an attribute — output in terminal |
+| `/lineage-save "query"` | Trace + save results to lineage-results/ |
+| `/transforms "query"` | Show only transformation chain |
+| `/impact "query"` | Impact analysis — what breaks if field changes |
+| `/lineage-history` | List all saved lineage results |
+| `/lineage-batch "f1, f2"` | Trace multiple attributes at once |
+| `/refresh-ast` | Refresh AST cache after code changes |
 
 ---
 
-### `/lineage-save` — Trace and save to files
-
-```
-/lineage-save "your natural language query"
-```
-
-Runs the same full pipeline as `/lineage`, then saves 4 output files to a timestamped folder:
-
-```
-lineage-results/<attribute>_<YYYYMMDD_HHMMSS>/
-├── lineage-report.md      ← full markdown report
-├── lineage-graph.txt      ← ASCII lineage diagram
-├── lineage.json           ← structured JSON lineage
-└── lineage-summary.txt    ← key facts (hops, layers, path, transformations)
-```
-
----
-
-### `/lineage-batch` — Trace multiple attributes at once
-
-```
-/lineage-batch "firstName, lastName, telephone, email"
-```
-
-Splits the arguments by comma and runs `/lineage-save` for each attribute one by one. After all are done, displays a consolidated summary table of all results.
-
----
-
-### `/impact` — Impact analysis for an attribute
-
-```
-/impact "firstName"
-```
-
-Runs the full pipeline and then applies the `impact-agent` to produce a focused impact report: every class, endpoint, query, and view that would need to change if the attribute were renamed, retyped, or removed. Saves the result to `lineage-results/<attribute>_impact.txt`.
-
----
-
-### `/transforms` — Transformation chain only
-
-```
-/transforms "telephone"
-```
-
-Runs the full pipeline but outputs **only the transformation chain** — every RENAME, CONVERT, FORMAT, and CASE_TRANSFORM found between DB and API. Skips graph, JSON, and full report output. Saves result to `lineage-results/<attribute>_transforms.txt`. Useful for a quick audit of data mutations without the full lineage detail.
-
----
-
-### `/lineage-history` — View saved results
-
-```
-/lineage-history
-```
-
-Lists all previously saved lineage results from the `lineage-results/` folder as a formatted table:
-
-```
-==========================================
-LINEAGE HISTORY
-==========================================
-Results found: 3
-
-ATTRIBUTE    | DATE              | HOPS | FILES | SUMMARY
--------------|-------------------|------|-------|--------------------------------------------------
-telephone    | 2026-03-15 14:30  |    5 |     4 | owners.telephone → Owner.java → OwnerController
-firstName    | 2026-03-15 13:10  |    4 |     4 | owners.first_name → Owner.java → OwnerController
-==========================================
-```
-
----
-
-### `/inventory` — Discover what's traceable
+## Example queries
 
 ```
 /inventory
+/lineage "trace firstName from database to source"
+/lineage-save "trace telephone from REST API to database"
+/transforms "trace lastName"
+/impact "if I rename firstName in owners table"
+/lineage-batch "firstName, lastName, telephone"
 ```
 
-Reads both AST files and outputs:
-- A table of every entity field mapped to its DB column and type
-- 5 ready-to-run `/lineage` example queries based on what actually exists in the repo
-
 ---
 
-## Trace Directions
-
-| Query phrasing | Direction | Flow |
-|----------------|-----------|------|
-| `"from database"` / `"from DB"` | sink-to-source | DB → API |
-| `"to database"` / `"to DB"` | source-to-sink | API → DB |
-| `"where does X originate"` | sink-to-source | DB → API |
-| `"what writes to X"` | source-to-sink | API → DB |
-| Not specified | both | both directions |
-
----
-
-## Outputs Explained
-
-| Output | Description |
-|--------|-------------|
-| **Lineage Chain** | Every hop from DB column to API endpoint (or reverse), with layer labels and transformation labels on each arrow |
-| **ASCII Graph** | Visual box-and-arrow diagram of the full flow |
-| **JSON Lineage** | Machine-readable structured lineage with nodes, edges, paths, and gaps |
-| **Markdown Report** | Human-readable report combining all findings — suitable for sharing |
-
-### Transformation Labels on Edges
-
-The `tracer` skill labels every edge in the chain where a transformation is detected:
-
-| Label | Source | Meaning |
-|-------|--------|---------|
-| `RENAME: fieldA → fieldB` | MapStruct `@Mapping` | Field is renamed between DTO and entity |
-| `CONVERT: qualifiedByName` | MapStruct `qualifiedByName` | Custom converter method applied |
-| `EXPRESSION: <expr>` | MapStruct `expression` | SpEL expression transforms the value |
-| `UPPER(field) applied` | PL/pgSQL `UPPER()` | Value is uppercased |
-| `LOWER(field) applied` | PL/pgSQL `LOWER()` | Value is lowercased |
-| `SUBSTR(field) — value truncated` | PL/pgSQL `SUBSTR()` | Value is partially extracted |
-| `CONVERT: TO_CHAR / TO_DATE / ...` | PL/pgSQL type cast | Type conversion applied |
-| `COALESCE(field, default)` | PL/pgSQL `COALESCE()` | Null substitution applied |
-| `CASE WHEN field — conditional branch` | PL/pgSQL `CASE` | Value is conditionally replaced |
-| `CONCAT / \|\| — merged with other value` | PL/pgSQL concat | Field is merged with another value |
-| `REPLACE(field, ...) applied` | PL/pgSQL `REPLACE()` | Substring substitution applied |
-| `CONVERT: TypeA → TypeB` | Java type cast | Type conversion in Java layer |
-
----
-
-## How the AST Files Are Used
-
-Instead of parsing raw Java and SQL source on every query, the system pre-parses them once into structured JSON:
-
-| File | Contains |
-|------|----------|
-| `ast-output/java-ast.json` | JPA entities, repositories, services, controllers, Spring Batch readers/processors/writers, `@Bean` Step/Job definitions |
-| `ast-output/sql-ast.json` | Table definitions, column names/types/constraints, INSERT/UPDATE/SELECT statements, column index (postgres dialect) |
-| `ast-output/plpgsql-ast.json` | PL/pgSQL FUNCTION and PROCEDURE definitions — parameters, return type, tables read/written, structured transformations (UPPER, COALESCE, CASE, SUBSTR, etc.) |
-| `ast-output/mapper-ast.json` | MapStruct `@Mapper` interfaces with field-level `@Mapping` entries (source/target field, transform type); ModelMapper `.map()` and `.addMapping()` call sites |
-
-All scanner skills read these files first — making traces fast and consistent.
-
-### SQL Dialect
-The scanner uses **postgres** as the canonical SQL dialect for all files (MySQL, H2, and Postgres schemas alike). `SERIAL`/`BIGSERIAL` types, `RETURNING` clauses, and `$1`/`$2` parameter placeholders are all handled natively.
-
-### Spring Batch Detection
-`java-ast.json` includes a `batch_components` array in its summary. Classes implementing `ItemReader`, `ItemProcessor`, or `ItemWriter` are classified by role. `@Bean` methods returning `Step`, `Job`, or `Tasklet` are captured as batch config entries so the full reader → processor → writer chain can be traced.
-
-### MapStruct / ModelMapper Detection
-`mapper-ast.json` captures two types of mappings:
-- **MapStruct**: `@Mapper` interfaces with `@Mapping(source=, target=)` annotations — detects DIRECT (same name), RENAME (different names), CONVERT (`qualifiedByName`), and EXPRESSION transforms
-- **ModelMapper**: `.map()`, `.typeMap()`, and `.addMapping()` call sites in Java source — detected via regex scan
-
----
-
-## Adding a New Repository to Analyze
-
-1. Place the new repo inside `repo/`:
-   ```
-   repo/my-new-app/
-   ```
-
-2. Update `CLAUDE.md` to point to the new repo path and describe its stack.
-
-3. Regenerate AST files:
-   ```bash
-   python3 tools/ast-scanner.py
-   ```
-
-4. Start tracing:
-   ```
-   /lineage "trace email from database to API"
-   ```
-
----
-
-## Agent Skills Reference
-
-### Orchestrating Agents
-
-These agents coordinate groups of scanner skills and are activated automatically by each slash command:
-
-| Agent | Purpose |
-|-------|---------|
-| `query-agent` | Master router — parses intent, classifies query (TRACE / ORIGIN / IMPACT / TRANSFORM), decides which specialist agents to activate |
-| `db-agent` | DB specialist — calls `db-scanner` + `sql-scanner` + `plpgsql-scanner` in sequence; combines into one DB layer finding |
-| `app-agent` | App specialist — calls `java-scanner` + `api-scanner` + `mapper-scanner` in sequence; combines into one app layer finding |
-| `transform-agent` | Transformation specialist — calls `tracer` + `collector`; builds the complete chain with labelled edges |
-| `impact-agent` | Impact specialist — uses `java-scanner` + `db-scanner` results to produce a full impact report for rename/retype/remove scenarios |
-
-### Scanner Skills
-
-| Skill | Step | Purpose |
-|-------|------|---------|
-| `orchestrator` | 1 | Parses query, extracts attribute + variants + direction |
-| `db-scanner` | 2 | Finds attribute in DB schema and JPA entities |
-| `sql-scanner` | 3 | Finds attribute in SQL scripts, procedures, triggers |
-| `plpgsql-scanner` | 3b | Finds attribute in PL/pgSQL functions/procedures; detects UPPER, COALESCE, CASE, SUBSTR and other transforms |
-| `java-scanner` | 4 | Finds attribute in services, repos, controllers; traces Spring Batch reader → processor → writer chain |
-| `mapper-scanner` | 4b | Finds field renames and conversions in MapStruct `@Mapper` interfaces and ModelMapper call sites |
-| `api-scanner` | 5 | Finds attribute in REST endpoints and Thymeleaf forms |
-| `tracer` | 6 | Connects all findings into one lineage chain; labels every edge with RENAME/CONVERT/CASE_TRANSFORM etc. |
-| `collector` | 7 | Merges paths, builds clean node/edge list |
-| `graph-output` | 8 | Renders ASCII lineage diagram |
-| `json-output` | 9 | Outputs structured JSON |
-| `report-output` | 10 | Produces full markdown report and saves 4 files to `lineage-results/` |
-
----
-
-## Slash Commands Reference
-
-| Command | Usage | Description |
-|---------|-------|-------------|
-| `/lineage` | `/lineage "query"` | Full pipeline, results printed to screen |
-| `/lineage-save` | `/lineage-save "query"` | Full pipeline + saves 4 files to `lineage-results/` |
-| `/lineage-batch` | `/lineage-batch "attr1, attr2, attr3"` | Runs `/lineage-save` for each comma-separated attribute |
-| `/lineage-history` | `/lineage-history` | Lists all saved results as a formatted table |
-| `/inventory` | `/inventory` | Discovers all traceable attributes in the repo |
-| `/impact` | `/impact "attribute"` | Impact analysis — what breaks if attribute is renamed or removed |
-| `/transforms` | `/transforms "attribute"` | Transformation chain only — fast audit of all renames and conversions |
-
----
-
-## Sample Results
-
-The `lineage-results/` folder contains saved outputs from previous runs. Example:
+## Project structure
 
 ```
-lineage-results/
-└── firstName_20260315_231706/
-    ├── lineage-report.md       # Full markdown report (20 KB)
-    ├── lineage-graph.txt       # ASCII lineage diagram (8.6 KB)
-    ├── lineage.json            # Structured JSON lineage (6.6 KB)
-    └── lineage-summary.txt     # Plain-English summary paragraph (1.3 KB)
+data-lineage/
+  CLAUDE.md                    ← project memory
+  README.md                    ← this file
+  tools/
+    ast-scanner.py             ← pre-indexes codebase
+  ast-output/
+    java-ast.json              ← pre-parsed Java structure
+    sql-ast.json               ← pre-parsed SQL structure
+    attribute-index.json       ← fast attribute lookup
+  .claude/
+    commands/
+      lineage.md               ← /lineage entry point
+      lineage-save.md          ← /lineage-save with file output
+      lineage-history.md       ← /lineage-history
+      lineage-batch.md         ← /lineage-batch
+      transforms.md            ← /transforms
+      impact.md                ← /impact
+      inventory.md             ← /inventory
+      refresh-ast.md           ← /refresh-ast
+    skills/
+      ── scanner skills ──
+      orchestrator/SKILL.md
+      db-scanner/SKILL.md
+      sql-scanner/SKILL.md
+      java-scanner/SKILL.md
+      api-scanner/SKILL.md
+      ── agent skills ──
+      query-agent/SKILL.md
+      db-agent/SKILL.md
+      app-agent/SKILL.md
+      transform-agent/SKILL.md
+      impact-agent/SKILL.md
+      cache-checker/SKILL.md
+      ── output skills ──
+      tracer/SKILL.md
+      collector/SKILL.md
+      graph-output/SKILL.md
+      json-output/SKILL.md
+      report-output/SKILL.md
 ```
 
-**Key finding from `firstName` trace:**
-- Stored in `owners.first_name` and `vets.first_name` (VARCHAR 30)
-- Defined once in `Person.java` `@MappedSuperclass`, inherited by `Owner` and `Vet`
-- Only transformation: JPA naming convention rename `first_name` ↔ `firstName` at the DB/ORM boundary
-- Inbound via `POST /owners/new` and `POST /owners/{id}/edit`; outbound via 4 read endpoints
+---
+
+## When to refresh the AST cache
+
+Run `python tools/ast-scanner.py` when:
+- New code added to the repo
+- Existing code modified
+- New repository added to `repo/` folder
+- Or just run `/refresh-ast` inside Claude Code
+
+---
+
+## Tech stack
+
+- Claude Code skills + agents (.md files only)
+- Python 3.x — javalang, sqlglot
+- Sample repo: Spring PetClinic (Spring Boot + MySQL)
+- Designed for: Java + Spring + PL/SQL + PostgreSQL
