@@ -10,8 +10,8 @@
         "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/vet/Vet.java",
         "class": "Vet",
         "annotations": [
-          "Entity",
-          "Table"
+          "Table",
+          "Entity"
         ],
         "table": "vets",
         "fields": [
@@ -54,8 +54,8 @@
         "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/vet/Specialty.java",
         "class": "Specialty",
         "annotations": [
-          "Entity",
-          "Table"
+          "Table",
+          "Entity"
         ],
         "table": "specialties",
         "fields": [
@@ -81,8 +81,8 @@
         "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
         "class": "Pet",
         "annotations": [
-          "Entity",
-          "Table"
+          "Table",
+          "Entity"
         ],
         "table": "pets",
         "fields": [
@@ -137,8 +137,8 @@
         "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
         "class": "Owner",
         "annotations": [
-          "Entity",
-          "Table"
+          "Table",
+          "Entity"
         ],
         "table": "owners",
         "fields": [
@@ -208,8 +208,8 @@
         "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/Visit.java",
         "class": "Visit",
         "annotations": [
-          "Entity",
-          "Table"
+          "Table",
+          "Entity"
         ],
         "table": "visits",
         "fields": [
@@ -243,8 +243,8 @@
         "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/PetType.java",
         "class": "PetType",
         "annotations": [
-          "Entity",
-          "Table"
+          "Table",
+          "Entity"
         ],
         "table": "types",
         "fields": [
@@ -281,8 +281,8 @@
             "return_type": "Collection<Vet>",
             "parameters": [],
             "annotations": [
-              "Cacheable",
-              "Transactional"
+              "Transactional",
+              "Cacheable"
             ]
           },
           {
@@ -295,8 +295,8 @@
               }
             ],
             "annotations": [
-              "Cacheable",
-              "Transactional"
+              "Transactional",
+              "Cacheable"
             ]
           }
         ]
@@ -420,8 +420,8 @@
             "return_type": "Vets",
             "parameters": [],
             "annotations": [
-              "GetMapping",
-              "ResponseBody"
+              "ResponseBody",
+              "GetMapping"
             ],
             "http_method": "GET"
           }
@@ -706,8 +706,8 @@
         "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
         "class": "PetController",
         "annotations": [
-          "RequestMapping",
-          "Controller"
+          "Controller",
+          "RequestMapping"
         ],
         "methods": [
           {
@@ -977,8 +977,8 @@
           "name": "PetClinicApplication",
           "layer": "other",
           "annotations": [
-            "ImportRuntimeHints",
-            "SpringBootApplication"
+            "SpringBootApplication",
+            "ImportRuntimeHints"
           ],
           "extends": null,
           "implements": [],
@@ -1023,8 +1023,8 @@
           "name": "Vet",
           "layer": "entity",
           "annotations": [
-            "Entity",
-            "Table"
+            "Table",
+            "Entity"
           ],
           "extends": "Person",
           "implements": [],
@@ -1089,8 +1089,8 @@
           "name": "Specialty",
           "layer": "entity",
           "annotations": [
-            "Entity",
-            "Table"
+            "Table",
+            "Entity"
           ],
           "extends": "NamedEntity",
           "implements": [],
@@ -1185,8 +1185,8 @@
               "return_type": "Vets",
               "parameters": [],
               "annotations": [
-                "GetMapping",
-                "ResponseBody"
+                "ResponseBody",
+                "GetMapping"
               ],
               "http_method": "GET"
             }
@@ -1220,8 +1220,8 @@
               "return_type": "Collection<Vet>",
               "parameters": [],
               "annotations": [
-                "Cacheable",
-                "Transactional"
+                "Transactional",
+                "Cacheable"
               ]
             },
             {
@@ -1234,8 +1234,8 @@
                 }
               ],
               "annotations": [
-                "Cacheable",
-                "Transactional"
+                "Transactional",
+                "Cacheable"
               ]
             }
           ]
@@ -1311,8 +1311,8 @@
           "name": "Pet",
           "layer": "entity",
           "annotations": [
-            "Entity",
-            "Table"
+            "Table",
+            "Entity"
           ],
           "extends": "NamedEntity",
           "implements": [],
@@ -1923,8 +1923,8 @@
           "name": "PetController",
           "layer": "controller",
           "annotations": [
-            "RequestMapping",
-            "Controller"
+            "Controller",
+            "RequestMapping"
           ],
           "extends": null,
           "implements": [],
@@ -2197,8 +2197,8 @@
           "name": "Owner",
           "layer": "entity",
           "annotations": [
-            "Entity",
-            "Table"
+            "Table",
+            "Entity"
           ],
           "extends": "Person",
           "implements": [],
@@ -2391,8 +2391,8 @@
           "name": "Visit",
           "layer": "entity",
           "annotations": [
-            "Entity",
-            "Table"
+            "Table",
+            "Entity"
           ],
           "extends": "BaseEntity",
           "implements": [],
@@ -2467,8 +2467,8 @@
           "name": "PetType",
           "layer": "entity",
           "annotations": [
-            "Entity",
-            "Table"
+            "Table",
+            "Entity"
           ],
           "extends": "NamedEntity",
           "implements": [],
@@ -2531,8 +2531,8 @@
           "name": "CacheConfiguration",
           "layer": "other",
           "annotations": [
-            "Configuration",
-            "EnableCaching"
+            "EnableCaching",
+            "Configuration"
           ],
           "extends": null,
           "implements": [],
@@ -2606,8 +2606,8 @@
           "name": "WebConfiguration",
           "layer": "other",
           "annotations": [
-            "Configuration",
-            "SuppressWarnings"
+            "SuppressWarnings",
+            "Configuration"
           ],
           "extends": null,
           "implements": [
@@ -2970,11 +2970,11 @@
           "name": "MySqlIntegrationTests",
           "layer": "other",
           "annotations": [
-            "DisabledInNativeImage",
             "ActiveProfiles",
-            "Testcontainers",
             "DisabledInAotMode",
-            "SpringBootTest"
+            "Testcontainers",
+            "SpringBootTest",
+            "DisabledInNativeImage"
           ],
           "extends": null,
           "implements": [],
@@ -3058,9 +3058,9 @@
               "return_type": "MySQLContainer",
               "parameters": [],
               "annotations": [
-                "ServiceConnection",
+                "Bean",
                 "Profile",
-                "Bean"
+                "ServiceConnection"
               ]
             },
             {
@@ -3136,8 +3136,8 @@
           "layer": "other",
           "annotations": [
             "WebMvcTest",
-            "DisabledInNativeImage",
-            "DisabledInAotMode"
+            "DisabledInAotMode",
+            "DisabledInNativeImage"
           ],
           "extends": null,
           "implements": [],
@@ -3229,8 +3229,8 @@
           "layer": "other",
           "annotations": [
             "WebMvcTest",
-            "DisabledInNativeImage",
-            "DisabledInAotMode"
+            "DisabledInAotMode",
+            "DisabledInNativeImage"
           ],
           "extends": null,
           "implements": [],
@@ -3481,8 +3481,8 @@
           "layer": "other",
           "annotations": [
             "WebMvcTest",
-            "DisabledInNativeImage",
-            "DisabledInAotMode"
+            "DisabledInAotMode",
+            "DisabledInNativeImage"
           ],
           "extends": null,
           "implements": [],
@@ -3656,8 +3656,8 @@
           "layer": "other",
           "annotations": [
             "WebMvcTest",
-            "DisabledInNativeImage",
-            "DisabledInAotMode"
+            "DisabledInAotMode",
+            "DisabledInNativeImage"
           ],
           "extends": null,
           "implements": [],
@@ -3746,8 +3746,8 @@
           "name": "PetValidatorTests",
           "layer": "other",
           "annotations": [
-            "DisabledInNativeImage",
-            "ExtendWith"
+            "ExtendWith",
+            "DisabledInNativeImage"
           ],
           "extends": null,
           "implements": [],
@@ -3893,8 +3893,8 @@
           "name": "PetTypeFormatterTests",
           "layer": "other",
           "annotations": [
-            "DisabledInNativeImage",
-            "ExtendWith"
+            "ExtendWith",
+            "DisabledInNativeImage"
           ],
           "extends": null,
           "implements": [],
