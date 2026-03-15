@@ -1,9 +1,11 @@
 ---
 name: report-output
 description: Produces a complete human-readable markdown
-             report of the data lineage. Use as the final
-             step after all other agents have completed.
-             Combines all previous outputs into one report.
+             report of the data lineage, then saves all
+             outputs (report, graph, JSON, summary) to
+             lineage-results/<attribute>_<timestamp>/.
+             Use as the final step after all other agents
+             have completed.
 ---
 
 When producing the lineage report:
@@ -82,3 +84,47 @@ attribute comes from, how it flows, and where it ends up>
    ==========================================
    <markdown report here>
    ==========================================
+
+---
+
+SAVE OUTPUT TO FILES:
+After generating all outputs, save them to disk:
+
+1. Derive folder name from attribute name and current timestamp:
+   Format:  lineage-results/<attribute>_<YYYYMMDD_HHMMSS>/
+   Example: lineage-results/telephone_20260315_143022/
+
+   Get the timestamp with this bash command:
+   date +%Y%m%d_%H%M%S
+
+2. Create the folder:
+   mkdir -p lineage-results/<attribute>_<timestamp>
+
+3. Save exactly these four files into that folder:
+
+   lineage-report.md
+     The full markdown report from the LINEAGE REPORT block above.
+
+   lineage-graph.txt
+     The ASCII diagram from the LINEAGE GRAPH block.
+
+   lineage.json
+     The structured JSON from the JSON LINEAGE block.
+
+   lineage-summary.txt
+     A single plain-English paragraph (3-5 sentences) summarising:
+     - what the attribute is
+     - which tables store it
+     - how it flows through the application
+     - any transformations or renames found
+     - the source (inbound) endpoint if one exists
+
+4. After saving, confirm with:
+
+   Results saved to: lineage-results/<attribute>_<timestamp>/
+   ┌─────────────────────────────────────────────────────┐
+   │ lineage-report.md      <size> KB                    │
+   │ lineage-graph.txt      <size> KB                    │
+   │ lineage.json           <size> KB                    │
+   │ lineage-summary.txt    <size> KB                    │
+   └─────────────────────────────────────────────────────┘
