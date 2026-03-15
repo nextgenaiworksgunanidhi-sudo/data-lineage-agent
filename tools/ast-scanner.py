@@ -640,15 +640,43 @@ def _parse_plpgsql_params(params_str: str) -> list:
     return params
 
 
+# Ordered table: (regex_pattern, transform_type, sql_function_name)
+# Each entry detects one class of field transformation inside a PL/pgSQL body.
+_TRANSFORM_PATTERNS = [
+    (r'(?i)\bUPPER\s*\(\s*(\w+)\s*\)',                  "CASE_TRANSFORM", "UPPER"),
+    (r'(?i)\bLOWER\s*\(\s*(\w+)\s*\)',                  "CASE_TRANSFORM", "LOWER"),
+    (r'(?i)\bTRIM\s*\(\s*(\w+)\s*\)',                   "CASE_TRANSFORM", "TRIM"),
+    (r'(?i)\bLTRIM\s*\(\s*(\w+)\s*[,)]',               "CASE_TRANSFORM", "LTRIM"),
+    (r'(?i)\bRTRIM\s*\(\s*(\w+)\s*[,)]',               "CASE_TRANSFORM", "RTRIM"),
+    (r'(?i)\bSUBSTR\s*\(\s*(\w+)\s*,',                 "TRUNCATE",       "SUBSTR"),
+    (r'(?i)\bSUBSTRING\s*\(\s*(\w+)\s*(?:FROM|,)',     "TRUNCATE",       "SUBSTRING"),
+    (r'(?i)\bTO_DATE\s*\(\s*(\w+)\s*,',                "TYPE_CONVERT",   "TO_DATE"),
+    (r'(?i)\bTO_TIMESTAMP\s*\(\s*(\w+)\s*,',           "TYPE_CONVERT",   "TO_TIMESTAMP"),
+    (r'(?i)\bTO_CHAR\s*\(\s*(\w+)\s*,',                "TYPE_CONVERT",   "TO_CHAR"),
+    (r'(?i)\bTO_NUMBER\s*\(\s*(\w+)\s*,',              "TYPE_CONVERT",   "TO_NUMBER"),
+    (r'(?i)\bCOALESCE\s*\(\s*(\w+)\s*,',              "NULL_HANDLE",    "COALESCE"),
+    (r'(?i)\bNULLIF\s*\(\s*(\w+)\s*,',                "NULL_HANDLE",    "NULLIF"),
+    (r'(?i)\bCASE\s+WHEN\s+(\w+)',                     "CONDITIONAL",    "CASE"),
+    (r'(?i)\bCONCAT\s*\(\s*(\w+)\s*,',                "MERGE",          "CONCAT"),
+    (r'(\w+)\s*\|\|\s*\w+',                            "MERGE",          "||"),
+    (r'(?i)\bREPLACE\s*\(\s*(\w+)\s*,',               "REPLACE",        "REPLACE"),
+    (r'(?i)\bREGEXP_REPLACE\s*\(\s*(\w+)\s*,',        "REPLACE",        "REGEXP_REPLACE"),
+]
+
+
+def _plpgsql_exec_block(body: str) -> str:
+    """Strip the DECLARE section from a PL/pgSQL body, leaving only the BEGIN…END block."""
+    block = _re.sub(r'(?is)^.*?BEGIN', '', body, count=1)
+    block = _re.sub(r'(?is)\bEND\s*;?\s*$', '', block)
+    return block
+
+
 def _scan_plpgsql_body(body: str) -> tuple:
     """
     Scan the body of a PL/pgSQL function for tables read and written.
     Returns (reads: list[str], writes: list[dict]).
     """
-    # Strip DECLARE section so we only look at the executable block
-    exec_block = _re.sub(r'(?is)^.*?BEGIN', '', body, count=1)
-    exec_block = _re.sub(r'(?is)\bEND\s*;?\s*$', '', exec_block)
-
+    exec_block = _plpgsql_exec_block(body)
     reads  = []
     writes = []
 
@@ -680,6 +708,31 @@ def _scan_plpgsql_body(body: str) -> tuple:
     return reads, writes
 
 
+def _scan_plpgsql_transformations(body: str) -> list:
+    """
+    Scan the executable block of a PL/pgSQL function body for field transformations.
+    Applies every pattern in _TRANSFORM_PATTERNS and returns a deduplicated list of
+    {field, function, type} dicts — one entry per unique (field, sql_function) pair.
+    """
+    exec_block = _plpgsql_exec_block(body)
+    seen    = set()
+    results = []
+
+    for pattern, transform_type, fn_name in _TRANSFORM_PATTERNS:
+        for m in _re.finditer(pattern, exec_block):
+            field = m.group(1).lower()
+            key   = (field, fn_name)
+            if key not in seen:
+                seen.add(key)
+                results.append({
+                    "field":    field,
+                    "function": fn_name,
+                    "type":     transform_type,
+                })
+
+    return results
+
+
 def _extract_plpgsql_functions(source: str, path: Path) -> list:
     """
     Extract all PL/pgSQL FUNCTION and PROCEDURE definitions from SQL source.
@@ -707,17 +760,19 @@ def _extract_plpgsql_functions(source: str, path: Path) -> list:
         if not body_match:
             continue   # unterminated dollar-quote — skip
 
-        body = source[body_start: body_start + body_match.start()]
-        reads, writes = _scan_plpgsql_body(body)
+        body            = source[body_start: body_start + body_match.start()]
+        reads, writes   = _scan_plpgsql_body(body)
+        transformations = _scan_plpgsql_transformations(body)
 
         results.append({
-            "file":       str(path.relative_to(ROOT)),
-            "kind":       m.group("kind").upper(),
-            "name":       m.group("name"),
-            "parameters": _parse_plpgsql_params(m.group("params") or ""),
-            "returns":    (m.group("returns") or "void").strip(),
-            "reads":      reads,
-            "writes":     writes,
+            "file":            str(path.relative_to(ROOT)),
+            "kind":            m.group("kind").upper(),
+            "name":            m.group("name"),
+            "parameters":      _parse_plpgsql_params(m.group("params") or ""),
+            "returns":         (m.group("returns") or "void").strip(),
+            "reads":           reads,
+            "writes":          writes,
+            "transformations": transformations,
         })
 
     return results
@@ -1053,12 +1108,16 @@ def print_summary(java_data: dict, sql_data: dict,
     if plpgsql_data["functions"]:
         for fn in plpgsql_data["functions"]:
             params = ", ".join(f"{p['name']} {p['type']}" for p in fn["parameters"]) or "—"
-            print(f"    • {fn['kind']} {fn['name']}({params}) → {fn['returns']}")
+            xforms = fn.get("transformations", [])
+            print(f"    • {fn['kind']} {fn['name']}({params}) → {fn['returns']}"
+                  f"  [{len(xforms)} transform(s)]")
             if fn["reads"]:
                 print(f"        READS:  {', '.join(fn['reads'])}")
             if fn["writes"]:
                 ops = ", ".join(f"{w['operation']} {w['table']}" for w in fn["writes"])
                 print(f"        WRITES: {ops}")
+            for xf in xforms:
+                print(f"        TRANSFORM: {xf['function']}({xf['field']}) → {xf['type']}")
     else:
         print("    (none found — application uses JPA/ORM for all DB operations)")
 
