@@ -32,6 +32,116 @@ Built on Claude Code's skill and agent system:
 
 ---
 
+## Skills & Agents Diagram
+
+```
+  User query
+      │
+      ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  ENTRY POINT COMMANDS  (.claude/commands/)                      │
+│                                                                 │
+│  /lineage   /lineage-save   /transforms   /impact   /inventory  │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  STEP 0 — cache-checker                                         │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ lineage-results/<attr>_*/  →  [CACHE HIT]  stop early   │   │
+│  │ attribute-index.json       →  [INDEX HIT]  fast lookup  │   │
+│  │ neither found              →  [CACHE MISS] full scan    │   │
+│  └─────────────────────────────────────────────────────────┘   │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │  [CACHE MISS]
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  STEP 1 — query-agent                                           │
+│  └── orchestrator  (extract attribute, variants, direction)     │
+└────────────┬────────────────────────────────────────────────────┘
+             │
+      ┌──────┴──────┐  run in parallel
+      ▼             ▼
+┌───────────┐  ┌───────────┐
+│  STEP 2   │  │  STEP 3   │
+│ db-agent  │  │ app-agent │
+│           │  │           │
+│ db-scanner│  │java-scanner│
+│ sql-scanner│ │api-scanner │
+│plpgsql-   │  │mapper-    │
+│ scanner   │  │ scanner   │
+└─────┬─────┘  └─────┬─────┘
+      └──────┬────────┘
+             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  STEP 4 — transform-agent                                       │
+│  ├── tracer    (connect findings → labelled lineage chain)      │
+│  └── collector (merge paths, deduplicate)                       │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+             ┌─────────────┼─────────────┐
+             ▼             ▼             ▼
+        ┌─────────┐  ┌──────────┐  ┌───────────────┐
+        │ STEP 5  │  │  STEP 6  │  │    STEP 7     │
+        │ graph-  │  │  json-   │  │  report-      │
+        │ output  │  │  output  │  │  output       │
+        │         │  │          │  │               │
+        │  ASCII  │  │structured│  │ markdown +    │
+        │ diagram │  │  JSON    │  │ saves 4 files │
+        └─────────┘  └──────────┘  └───────────────┘
+```
+
+### Scanner skills — what each one reads
+
+```
+┌─────────────────┬──────────────────────────────────────────────┐
+│ Skill           │ Reads                                        │
+├─────────────────┼──────────────────────────────────────────────┤
+│ db-scanner      │ ast-output/java-ast.json  (entities, repos)  │
+│                 │ ast-output/sql-ast.json   (tables, columns)  │
+├─────────────────┼──────────────────────────────────────────────┤
+│ sql-scanner     │ repo/**/*.sql             (raw SQL files)    │
+├─────────────────┼──────────────────────────────────────────────┤
+│ plpgsql-scanner │ ast-output/plpgsql-ast.json  (functions)     │
+├─────────────────┼──────────────────────────────────────────────┤
+│ java-scanner    │ ast-output/java-ast.json  (services, ctrls)  │
+├─────────────────┼──────────────────────────────────────────────┤
+│ api-scanner     │ ast-output/java-ast.json  (controllers)      │
+│                 │ repo/**/templates/**/*.html  (Thymeleaf)     │
+├─────────────────┼──────────────────────────────────────────────┤
+│ mapper-scanner  │ ast-output/mapper-ast.json  (MapStruct)      │
+├─────────────────┼──────────────────────────────────────────────┤
+│ cache-checker   │ lineage-results/           (saved runs)      │
+│                 │ ast-output/attribute-index.json              │
+└─────────────────┴──────────────────────────────────────────────┘
+```
+
+### Edge labels produced by tracer
+
+```
+  [DB] owners.first_name
+    ↑ ── RENAME: first_name → firstName ──►
+  [ORM] Owner.java
+    ↑
+  [ORM] OwnerRepository.findById()
+    ↑
+  [JAVA] OwnerController.showOwner()
+    ↑
+  [API] GET /owners/{id}
+
+  Possible edge labels:
+  RENAME     — field name changed (JPA convention or MapStruct @Mapping)
+  CONVERT    — type conversion (qualifiedByName or Java cast)
+  EXPRESSION — inline SpEL/Java expression in mapper
+  UPPER()    — PL/pgSQL UPPER() applied
+  SUBSTR()   — PL/pgSQL SUBSTR() truncation
+  COALESCE() — PL/pgSQL null substitution
+  CASE WHEN  — conditional branch in PL/pgSQL
+  CONCAT     — value merged with another field
+```
+
+---
+
 ## Setup
 
 ### 1. Clone this repo
