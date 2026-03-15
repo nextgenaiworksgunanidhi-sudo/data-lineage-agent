@@ -189,6 +189,26 @@ Splits the arguments by comma and runs `/lineage-save` for each attribute one by
 
 ---
 
+### `/impact` — Impact analysis for an attribute
+
+```
+/impact "firstName"
+```
+
+Runs the full pipeline and then applies the `impact-agent` to produce a focused impact report: every class, endpoint, query, and view that would need to change if the attribute were renamed, retyped, or removed. Saves the result to `lineage-results/<attribute>_impact.txt`.
+
+---
+
+### `/transforms` — Transformation chain only
+
+```
+/transforms "telephone"
+```
+
+Runs the full pipeline but outputs **only the transformation chain** — every RENAME, CONVERT, FORMAT, and CASE_TRANSFORM found between DB and API. Skips graph, JSON, and full report output. Saves result to `lineage-results/<attribute>_transforms.txt`. Useful for a quick audit of data mutations without the full lineage detail.
+
+---
+
 ### `/lineage-history` — View saved results
 
 ```
@@ -315,6 +335,20 @@ The scanner uses **postgres** as the canonical SQL dialect for all files (MySQL,
 
 ## Agent Skills Reference
 
+### Orchestrating Agents
+
+These agents coordinate groups of scanner skills and are activated automatically by each slash command:
+
+| Agent | Purpose |
+|-------|---------|
+| `query-agent` | Master router — parses intent, classifies query (TRACE / ORIGIN / IMPACT / TRANSFORM), decides which specialist agents to activate |
+| `db-agent` | DB specialist — calls `db-scanner` + `sql-scanner` + `plpgsql-scanner` in sequence; combines into one DB layer finding |
+| `app-agent` | App specialist — calls `java-scanner` + `api-scanner` + `mapper-scanner` in sequence; combines into one app layer finding |
+| `transform-agent` | Transformation specialist — calls `tracer` + `collector`; builds the complete chain with labelled edges |
+| `impact-agent` | Impact specialist — uses `java-scanner` + `db-scanner` results to produce a full impact report for rename/retype/remove scenarios |
+
+### Scanner Skills
+
 | Skill | Step | Purpose |
 |-------|------|---------|
 | `orchestrator` | 1 | Parses query, extracts attribute + variants + direction |
@@ -330,6 +364,8 @@ The scanner uses **postgres** as the canonical SQL dialect for all files (MySQL,
 | `json-output` | 9 | Outputs structured JSON |
 | `report-output` | 10 | Produces full markdown report and saves 4 files to `lineage-results/` |
 
+---
+
 ## Slash Commands Reference
 
 | Command | Usage | Description |
@@ -339,3 +375,26 @@ The scanner uses **postgres** as the canonical SQL dialect for all files (MySQL,
 | `/lineage-batch` | `/lineage-batch "attr1, attr2, attr3"` | Runs `/lineage-save` for each comma-separated attribute |
 | `/lineage-history` | `/lineage-history` | Lists all saved results as a formatted table |
 | `/inventory` | `/inventory` | Discovers all traceable attributes in the repo |
+| `/impact` | `/impact "attribute"` | Impact analysis — what breaks if attribute is renamed or removed |
+| `/transforms` | `/transforms "attribute"` | Transformation chain only — fast audit of all renames and conversions |
+
+---
+
+## Sample Results
+
+The `lineage-results/` folder contains saved outputs from previous runs. Example:
+
+```
+lineage-results/
+└── firstName_20260315_231706/
+    ├── lineage-report.md       # Full markdown report (20 KB)
+    ├── lineage-graph.txt       # ASCII lineage diagram (8.6 KB)
+    ├── lineage.json            # Structured JSON lineage (6.6 KB)
+    └── lineage-summary.txt     # Plain-English summary paragraph (1.3 KB)
+```
+
+**Key finding from `firstName` trace:**
+- Stored in `owners.first_name` and `vets.first_name` (VARCHAR 30)
+- Defined once in `Person.java` `@MappedSuperclass`, inherited by `Owner` and `Vet`
+- Only transformation: JPA naming convention rename `first_name` ↔ `firstName` at the DB/ORM boundary
+- Inbound via `POST /owners/new` and `POST /owners/{id}/edit`; outbound via 4 read endpoints

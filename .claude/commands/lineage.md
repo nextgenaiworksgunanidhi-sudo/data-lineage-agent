@@ -1,59 +1,28 @@
 You are running the Data Lineage pipeline.
-The repository under analysis is in repo/spring-petclinic/
+Repository: repo/spring-petclinic/
+User query: $ARGUMENTS
 
-The user query is: $ARGUMENTS
+STEP 1 — Apply query-agent skill
+  Understand intent, route to correct agents
 
-Follow these steps in order. Show a progress message 
-before starting each step.
+STEP 2 — Apply db-agent skill
+  DB specialist: calls db-scanner + sql-scanner +
+  plpgsql-scanner skills internally
 
-Step 1 - Apply orchestrator skill
-  Parse the query. Extract attribute name, variants, 
-  direction and which scanners are needed.
+STEP 3 — Apply app-agent skill
+  App specialist: calls java-scanner + api-scanner +
+  mapper-scanner skills internally
 
-Step 2 - Apply db-scanner skill
-  Scan repo/ for DB schema, JPA entities, SQL scripts.
-  Find the attribute at the database layer.
+  Note: Steps 2 and 3 are independent — run both
+  before moving to Step 4
 
-Step 3 - Apply sql-scanner skill
-  Scan repo/ for SQL files, stored procedures, triggers.
-  Find the attribute in SQL logic layer.
+STEP 4 — Apply transform-agent skill
+  Calls tracer + collector skills internally
+  Builds complete transformation chain
 
-Step 3b - Apply plpgsql-scanner skill
-  Read ast-output/plpgsql-ast.json.
-  Find PL/pgSQL functions and procedures that read,
-  write, or transform the attribute. If no functions
-  exist in the repo, state that clearly and continue.
+STEP 5 — Apply graph-output skill
+STEP 6 — Apply json-output skill
+STEP 7 — Apply report-output skill
+  Save all outputs to lineage-results/ folder
 
-Step 4 - Apply java-scanner skill
-  Scan repo/ Java source for services, repositories,
-  batch jobs that use the attribute.
-
-Step 4b - Apply mapper-scanner skill
-  Read ast-output/mapper-ast.json.
-  Find MapStruct @Mapper interfaces and ModelMapper
-  call sites where the attribute is renamed or
-  converted between DTOs and entities. If no mappers
-  exist in the repo, state that clearly and continue.
-
-Step 5 - Apply api-scanner skill
-  Scan repo/ for REST controllers and forms that
-  expose or receive the attribute.
-
-Step 6 - Apply tracer skill
-  Connect all findings into one lineage chain
-  from sink to source or source to sink.
-
-Step 7 - Apply collector skill
-  Merge all paths. Remove duplicates.
-  Structure the final lineage.
-
-Step 8 - Apply graph-output skill
-  Draw the visual ASCII lineage diagram.
-
-Step 9 - Apply json-output skill
-  Output the structured JSON lineage.
-
-Step 10 - Apply report-output skill
-  Write the full human-readable markdown report.
-
-Label every output clearly. Do not skip any step.
+Show progress as each agent and skill activates.
