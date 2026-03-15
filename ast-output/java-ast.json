@@ -281,8 +281,8 @@
             "return_type": "Collection<Vet>",
             "parameters": [],
             "annotations": [
-              "Transactional",
-              "Cacheable"
+              "Cacheable",
+              "Transactional"
             ]
           },
           {
@@ -295,8 +295,8 @@
               }
             ],
             "annotations": [
-              "Transactional",
-              "Cacheable"
+              "Cacheable",
+              "Transactional"
             ]
           }
         ]
@@ -1220,8 +1220,8 @@
               "return_type": "Collection<Vet>",
               "parameters": [],
               "annotations": [
-                "Transactional",
-                "Cacheable"
+                "Cacheable",
+                "Transactional"
               ]
             },
             {
@@ -1234,8 +1234,8 @@
                 }
               ],
               "annotations": [
-                "Transactional",
-                "Cacheable"
+                "Cacheable",
+                "Transactional"
               ]
             }
           ]
@@ -2531,8 +2531,8 @@
           "name": "CacheConfiguration",
           "layer": "other",
           "annotations": [
-            "EnableCaching",
-            "Configuration"
+            "Configuration",
+            "EnableCaching"
           ],
           "extends": null,
           "implements": [],
@@ -2606,8 +2606,8 @@
           "name": "WebConfiguration",
           "layer": "other",
           "annotations": [
-            "SuppressWarnings",
-            "Configuration"
+            "Configuration",
+            "SuppressWarnings"
           ],
           "extends": null,
           "implements": [
@@ -2971,10 +2971,10 @@
           "layer": "other",
           "annotations": [
             "ActiveProfiles",
-            "DisabledInAotMode",
-            "Testcontainers",
             "SpringBootTest",
-            "DisabledInNativeImage"
+            "Testcontainers",
+            "DisabledInNativeImage",
+            "DisabledInAotMode"
           ],
           "extends": null,
           "implements": [],
@@ -3058,9 +3058,9 @@
               "return_type": "MySQLContainer",
               "parameters": [],
               "annotations": [
-                "Bean",
+                "ServiceConnection",
                 "Profile",
-                "ServiceConnection"
+                "Bean"
               ]
             },
             {
@@ -3135,9 +3135,9 @@
           "name": "VetControllerTests",
           "layer": "other",
           "annotations": [
-            "WebMvcTest",
+            "DisabledInNativeImage",
             "DisabledInAotMode",
-            "DisabledInNativeImage"
+            "WebMvcTest"
           ],
           "extends": null,
           "implements": [],
@@ -3228,9 +3228,9 @@
           "name": "PetControllerTests",
           "layer": "other",
           "annotations": [
-            "WebMvcTest",
+            "DisabledInNativeImage",
             "DisabledInAotMode",
-            "DisabledInNativeImage"
+            "WebMvcTest"
           ],
           "extends": null,
           "implements": [],
@@ -3480,9 +3480,9 @@
           "name": "OwnerControllerTests",
           "layer": "other",
           "annotations": [
-            "WebMvcTest",
+            "DisabledInNativeImage",
             "DisabledInAotMode",
-            "DisabledInNativeImage"
+            "WebMvcTest"
           ],
           "extends": null,
           "implements": [],
@@ -3655,9 +3655,9 @@
           "name": "VisitControllerTests",
           "layer": "other",
           "annotations": [
-            "WebMvcTest",
+            "DisabledInNativeImage",
             "DisabledInAotMode",
-            "DisabledInNativeImage"
+            "WebMvcTest"
           ],
           "extends": null,
           "implements": [],
@@ -3746,8 +3746,8 @@
           "name": "PetValidatorTests",
           "layer": "other",
           "annotations": [
-            "ExtendWith",
-            "DisabledInNativeImage"
+            "DisabledInNativeImage",
+            "ExtendWith"
           ],
           "extends": null,
           "implements": [],
@@ -3893,8 +3893,8 @@
           "name": "PetTypeFormatterTests",
           "layer": "other",
           "annotations": [
-            "ExtendWith",
-            "DisabledInNativeImage"
+            "DisabledInNativeImage",
+            "ExtendWith"
           ],
           "extends": null,
           "implements": [],
@@ -4098,8 +4098,8 @@
           "name": "CrashControllerIntegrationTests",
           "layer": "other",
           "annotations": [
-            "AutoConfigureTestRestTemplate",
-            "SpringBootTest"
+            "SpringBootTest",
+            "AutoConfigureTestRestTemplate"
           ],
           "extends": null,
           "implements": [],
@@ -4261,8 +4261,8 @@
           "name": "ClinicServiceTests",
           "layer": "other",
           "annotations": [
-            "AutoConfigureTestDatabase",
-            "DataJpaTest"
+            "DataJpaTest",
+            "AutoConfigureTestDatabase"
           ],
           "extends": null,
           "implements": [],

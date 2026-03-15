@@ -37,8 +37,9 @@ OUT_DIR   = ROOT / "ast-output"
 JAVA_OUT  = OUT_DIR / "java-ast.json"
 SQL_OUT   = OUT_DIR / "sql-ast.json"
 
-PLPGSQL_OUT = OUT_DIR / "plpgsql-ast.json"
-MAPPER_OUT  = OUT_DIR / "mapper-ast.json"
+PLPGSQL_OUT     = OUT_DIR / "plpgsql-ast.json"
+MAPPER_OUT      = OUT_DIR / "mapper-ast.json"
+ATTR_INDEX_OUT  = OUT_DIR / "attribute-index.json"
 
 OUT_DIR.mkdir(exist_ok=True)
 
@@ -1026,11 +1027,166 @@ def scan_mappers(repo_root: Path) -> dict:
 
 
 # ════════════════════════════════════════════════════════════════════════════
+# ATTRIBUTE INDEX BUILDER
+# ════════════════════════════════════════════════════════════════════════════
+
+def _camel_to_snake(name: str) -> str:
+    """Convert camelCase or PascalCase to snake_case."""
+    s = _re.sub(r"([A-Z][a-z]+)", r"_\1", name)
+    s = _re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s)
+    return s.lower().lstrip("_")
+
+
+def _make_variants(java_field: str, explicit_col: str = None) -> list:
+    """Return [camelCase, snake_case, UPPER_CASE] variants plus any explicit column override."""
+    snake = _camel_to_snake(java_field)
+    seen, variants = {}, []
+    for v in [java_field, snake, snake.upper()]:
+        if v not in seen:
+            seen[v] = True
+            variants.append(v)
+    if explicit_col and explicit_col not in seen:
+        seen[explicit_col] = True
+        variants.append(explicit_col)
+        uc = explicit_col.upper()
+        if uc not in seen:
+            variants.append(uc)
+    return variants
+
+
+def build_attribute_index(java_data: dict, sql_data: dict) -> dict:
+    """
+    Build a flat attribute lookup keyed by camelCase Java field name.
+    Each entry lists every location where the attribute appears:
+    DB table columns, JPA entity fields, repository methods, and API endpoints.
+    """
+    entities    = java_data["summary"].get("entities", [])
+    repos       = java_data["summary"].get("repositories", [])
+    controllers = java_data["summary"].get("controllers", [])
+    col_index   = sql_data["summary"].get("column_index", {})
+    all_tables  = sql_data["summary"].get("all_tables", {})
+
+    def _col_type(table: str, col: str) -> str:
+        for c in all_tables.get(table, {}).get("columns", []):
+            if c["column"] == col:
+                return c["type"]
+        return ""
+
+    # ── Step 1: collect all JPA fields → canonical camelCase key ──────────
+    # attrs[fname] = {explicit_col, entity_classes, jpa_entries}
+    attrs = {}
+    for entity in entities:
+        cls = entity.get("class", "")
+        for field in entity.get("fields", []):
+            fname    = field.get("name", "")
+            explicit = field.get("column_name")     # set when @Column(name=...) differs
+            anns     = field.get("annotations", [])
+            ann_str  = (f"@Column(name={explicit})" if explicit
+                        else ("@Column" if "Column" in anns else ""))
+            if fname not in attrs:
+                attrs[fname] = {"explicit_col": None, "entity_classes": set(), "jpa_entries": []}
+            attrs[fname]["entity_classes"].add(cls)
+            if explicit and not attrs[fname]["explicit_col"]:
+                attrs[fname]["explicit_col"] = explicit
+            attrs[fname]["jpa_entries"].append(
+                {"layer": "JPA", "class": cls, "field": fname, "annotation": ann_str}
+            )
+
+    # ── Step 2: for each JPA attribute build its full location list ────────
+    index = {}
+    for fname, meta in attrs.items():
+        explicit       = meta["explicit_col"]
+        entity_classes = meta["entity_classes"]
+        variants       = _make_variants(fname, explicit)
+
+        snake_default = _camel_to_snake(fname)
+        db_col        = explicit if explicit else snake_default
+
+        locations = []
+        seen_locs: set = set()
+
+        def _add(entry: dict):
+            key = json.dumps(entry, sort_keys=True)
+            if key not in seen_locs:
+                seen_locs.add(key)
+                locations.append(entry)
+
+        # DB layer
+        db_tables = list(col_index.get(db_col, []))
+        if explicit and snake_default != db_col:           # also check snake default
+            for t in col_index.get(snake_default, []):
+                if t not in db_tables:
+                    db_tables.append(t)
+        for table in db_tables:
+            _add({"layer": "DB", "table": table, "column": db_col, "type": _col_type(table, db_col)})
+
+        # JPA layer
+        for entry in meta["jpa_entries"]:
+            _add(entry)
+
+        # REPO layer — match method name or @Query body against any variant
+        lower_variants = {v.lower().replace("_", "") for v in variants}
+        for repo in repos:
+            cls = repo.get("class", "")
+            for method in repo.get("methods", []):
+                mname      = method.get("name", "")
+                query      = method.get("query") or ""
+                name_norm  = mname.lower().replace("_", "")
+                if (any(v in name_norm for v in lower_variants)
+                        or any(v in query for v in variants)):
+                    _add({"layer": "REPO", "class": cls, "method": mname})
+
+        # API layer — match endpoints whose parameters or return type use an entity class
+        for ctrl in controllers:
+            for method in ctrl.get("methods", []):
+                path      = method.get("path", "")
+                http_meth = method.get("http_method", "")
+                if not path:
+                    continue
+                params      = method.get("parameters", [])
+                return_type = method.get("return_type", "")
+                involved    = (
+                    any(p.get("type", "") in entity_classes for p in params)
+                    or any(ec in return_type for ec in entity_classes)
+                )
+                if not involved:
+                    continue
+                direction = ("INBOUND"
+                             if http_meth in {"POST", "PUT", "PATCH", "DELETE"}
+                             else "OUTBOUND")
+                endpoint = f"{http_meth} {path}" if http_meth else path
+                _add({"layer": "API", "endpoint": endpoint, "direction": direction})
+
+        if locations:
+            index[fname] = {"variants": variants, "locations": locations}
+
+    # ── Step 3: catch DB-only columns not covered by any JPA field ─────────
+    camel_keys_snake = {_camel_to_snake(k) for k in index}
+    for col_name, tables in col_index.items():
+        if col_name in camel_keys_snake or col_name in index:
+            continue
+        parts = col_name.split("_")
+        camel = parts[0] + "".join(p.capitalize() for p in parts[1:])
+        if camel in index:
+            continue
+        locations = [
+            {"layer": "DB", "table": t, "column": col_name, "type": _col_type(t, col_name)}
+            for t in tables
+        ]
+        if locations:
+            variants = list(dict.fromkeys([camel, col_name, col_name.upper()]))
+            index[camel] = {"variants": variants, "locations": locations}
+
+    return dict(sorted(index.items()))
+
+
+# ════════════════════════════════════════════════════════════════════════════
 # MAIN
 # ════════════════════════════════════════════════════════════════════════════
 
 def print_summary(java_data: dict, sql_data: dict,
-                  plpgsql_data: dict, mapper_data: dict) -> None:
+                  plpgsql_data: dict, mapper_data: dict,
+                  attr_index: dict) -> None:
     jm = java_data["meta"]
     sm = sql_data["meta"]
     js = java_data["summary"]
@@ -1142,11 +1298,18 @@ def print_summary(java_data: dict, sql_data: dict,
     else:
         print("    (no ModelMapper calls found)")
 
+    print(f"\n  Attribute Index  ({len(attr_index)} attributes)")
+    for attr, meta in attr_index.items():
+        n_locs = len(meta["locations"])
+        layers = ", ".join(dict.fromkeys(loc["layer"] for loc in meta["locations"]))
+        print(f"    • {attr:25s}  {n_locs} location(s)  [{layers}]")
+
     print(f"\n  Output written to:")
     print(f"    {JAVA_OUT}")
     print(f"    {SQL_OUT}")
     print(f"    {PLPGSQL_OUT}")
     print(f"    {MAPPER_OUT}")
+    print(f"    {ATTR_INDEX_OUT}")
     print("═" * 54 + "\n")
 
 
@@ -1167,7 +1330,11 @@ def main():
     mapper_data = scan_mappers(REPO)
     MAPPER_OUT.write_text(json.dumps(mapper_data, indent=2, default=str), encoding="utf-8")
 
-    print_summary(java_data, sql_data, plpgsql_data, mapper_data)
+    print(f"Building attribute index …")
+    attr_index = build_attribute_index(java_data, sql_data)
+    ATTR_INDEX_OUT.write_text(json.dumps(attr_index, indent=2, default=str), encoding="utf-8")
+
+    print_summary(java_data, sql_data, plpgsql_data, mapper_data, attr_index)
 
 
 if __name__ == "__main__":

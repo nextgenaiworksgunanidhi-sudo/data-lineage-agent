@@ -1,0 +1,781 @@
+{
+  "address": {
+    "variants": [
+      "address",
+      "ADDRESS"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "owners",
+        "column": "address",
+        "type": "VARCHAR(255)"
+      },
+      {
+        "layer": "JPA",
+        "class": "Owner",
+        "field": "address",
+        "annotation": "@Column"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/pets/{petId}/visits/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /owners",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/edit",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /pets/new",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/{petId}/edit",
+        "direction": "INBOUND"
+      }
+    ]
+  },
+  "birthDate": {
+    "variants": [
+      "birthDate",
+      "birth_date",
+      "BIRTH_DATE"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "pets",
+        "column": "birth_date",
+        "type": "DATE"
+      },
+      {
+        "layer": "JPA",
+        "class": "Pet",
+        "field": "birthDate",
+        "annotation": "@Column"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/{petId}/edit",
+        "direction": "INBOUND"
+      }
+    ]
+  },
+  "city": {
+    "variants": [
+      "city",
+      "CITY"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "owners",
+        "column": "city",
+        "type": "VARCHAR(80)"
+      },
+      {
+        "layer": "JPA",
+        "class": "Owner",
+        "field": "city",
+        "annotation": "@Column"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/pets/{petId}/visits/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /owners",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/edit",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /pets/new",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/{petId}/edit",
+        "direction": "INBOUND"
+      }
+    ]
+  },
+  "date": {
+    "variants": [
+      "date",
+      "DATE",
+      "visit_date",
+      "VISIT_DATE"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "visits",
+        "column": "visit_date",
+        "type": "DATE"
+      },
+      {
+        "layer": "JPA",
+        "class": "Visit",
+        "field": "date",
+        "annotation": "@Column(name=visit_date)"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/pets/{petId}/visits/new",
+        "direction": "INBOUND"
+      }
+    ]
+  },
+  "description": {
+    "variants": [
+      "description",
+      "DESCRIPTION"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "visits",
+        "column": "description",
+        "type": "VARCHAR(255)"
+      },
+      {
+        "layer": "JPA",
+        "class": "Visit",
+        "field": "description",
+        "annotation": ""
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/pets/{petId}/visits/new",
+        "direction": "INBOUND"
+      }
+    ]
+  },
+  "firstName": {
+    "variants": [
+      "firstName",
+      "first_name",
+      "FIRST_NAME"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "vets",
+        "column": "first_name",
+        "type": "VARCHAR(30)"
+      },
+      {
+        "layer": "DB",
+        "table": "owners",
+        "column": "first_name",
+        "type": "VARCHAR(30)"
+      },
+      {
+        "layer": "JPA",
+        "class": "Vet",
+        "field": "firstName",
+        "annotation": "@Column"
+      },
+      {
+        "layer": "JPA",
+        "class": "Owner",
+        "field": "firstName",
+        "annotation": "@Column"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/pets/{petId}/visits/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /owners",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/edit",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /pets/new",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/{petId}/edit",
+        "direction": "INBOUND"
+      }
+    ]
+  },
+  "id": {
+    "variants": [
+      "id",
+      "ID"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "vets",
+        "column": "id",
+        "type": "UINT(4)"
+      },
+      {
+        "layer": "DB",
+        "table": "specialties",
+        "column": "id",
+        "type": "UINT(4)"
+      },
+      {
+        "layer": "DB",
+        "table": "types",
+        "column": "id",
+        "type": "UINT(4)"
+      },
+      {
+        "layer": "DB",
+        "table": "owners",
+        "column": "id",
+        "type": "UINT(4)"
+      },
+      {
+        "layer": "DB",
+        "table": "pets",
+        "column": "id",
+        "type": "UINT(4)"
+      },
+      {
+        "layer": "DB",
+        "table": "visits",
+        "column": "id",
+        "type": "UINT(4)"
+      },
+      {
+        "layer": "JPA",
+        "class": "Vet",
+        "field": "id",
+        "annotation": ""
+      },
+      {
+        "layer": "JPA",
+        "class": "Specialty",
+        "field": "id",
+        "annotation": ""
+      },
+      {
+        "layer": "JPA",
+        "class": "Pet",
+        "field": "id",
+        "annotation": ""
+      },
+      {
+        "layer": "JPA",
+        "class": "Owner",
+        "field": "id",
+        "annotation": ""
+      },
+      {
+        "layer": "JPA",
+        "class": "Visit",
+        "field": "id",
+        "annotation": ""
+      },
+      {
+        "layer": "JPA",
+        "class": "PetType",
+        "field": "id",
+        "annotation": ""
+      },
+      {
+        "layer": "REPO",
+        "class": "OwnerRepository",
+        "method": "findById"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/pets/{petId}/visits/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /owners",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/edit",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /pets/new",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/{petId}/edit",
+        "direction": "INBOUND"
+      }
+    ]
+  },
+  "lastName": {
+    "variants": [
+      "lastName",
+      "last_name",
+      "LAST_NAME"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "vets",
+        "column": "last_name",
+        "type": "VARCHAR(30)"
+      },
+      {
+        "layer": "DB",
+        "table": "owners",
+        "column": "last_name",
+        "type": "VARCHAR(30)"
+      },
+      {
+        "layer": "JPA",
+        "class": "Vet",
+        "field": "lastName",
+        "annotation": "@Column"
+      },
+      {
+        "layer": "JPA",
+        "class": "Owner",
+        "field": "lastName",
+        "annotation": "@Column"
+      },
+      {
+        "layer": "REPO",
+        "class": "OwnerRepository",
+        "method": "findByLastNameStartingWith"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/pets/{petId}/visits/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /owners",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/edit",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /pets/new",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/{petId}/edit",
+        "direction": "INBOUND"
+      }
+    ]
+  },
+  "name": {
+    "variants": [
+      "name",
+      "NAME"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "specialties",
+        "column": "name",
+        "type": "VARCHAR(80)"
+      },
+      {
+        "layer": "DB",
+        "table": "types",
+        "column": "name",
+        "type": "VARCHAR(80)"
+      },
+      {
+        "layer": "DB",
+        "table": "pets",
+        "column": "name",
+        "type": "VARCHAR(30)"
+      },
+      {
+        "layer": "JPA",
+        "class": "Specialty",
+        "field": "name",
+        "annotation": "@Column"
+      },
+      {
+        "layer": "JPA",
+        "class": "Pet",
+        "field": "name",
+        "annotation": "@Column"
+      },
+      {
+        "layer": "JPA",
+        "class": "PetType",
+        "field": "name",
+        "annotation": "@Column"
+      },
+      {
+        "layer": "REPO",
+        "class": "OwnerRepository",
+        "method": "findByLastNameStartingWith"
+      },
+      {
+        "layer": "REPO",
+        "class": "PetTypeRepository",
+        "method": "findPetTypes"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/{petId}/edit",
+        "direction": "INBOUND"
+      }
+    ]
+  },
+  "ownerId": {
+    "variants": [
+      "ownerId",
+      "owner_id",
+      "OWNER_ID"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "pets",
+        "column": "owner_id",
+        "type": "UINT(4)"
+      }
+    ]
+  },
+  "petId": {
+    "variants": [
+      "petId",
+      "pet_id",
+      "PET_ID"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "visits",
+        "column": "pet_id",
+        "type": "UINT(4)"
+      }
+    ]
+  },
+  "pets": {
+    "variants": [
+      "pets",
+      "PETS"
+    ],
+    "locations": [
+      {
+        "layer": "JPA",
+        "class": "Owner",
+        "field": "pets",
+        "annotation": ""
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/pets/{petId}/visits/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /owners",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/edit",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /pets/new",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/{petId}/edit",
+        "direction": "INBOUND"
+      }
+    ]
+  },
+  "specialties": {
+    "variants": [
+      "specialties",
+      "SPECIALTIES"
+    ],
+    "locations": [
+      {
+        "layer": "JPA",
+        "class": "Vet",
+        "field": "specialties",
+        "annotation": ""
+      }
+    ]
+  },
+  "specialtyId": {
+    "variants": [
+      "specialtyId",
+      "specialty_id",
+      "SPECIALTY_ID"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "vet_specialties",
+        "column": "specialty_id",
+        "type": "UINT(4)"
+      }
+    ]
+  },
+  "telephone": {
+    "variants": [
+      "telephone",
+      "TELEPHONE"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "owners",
+        "column": "telephone",
+        "type": "VARCHAR(20)"
+      },
+      {
+        "layer": "JPA",
+        "class": "Owner",
+        "field": "telephone",
+        "annotation": "@Column"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/pets/{petId}/visits/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /owners",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /owners/{ownerId}/edit",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "GET /pets/new",
+        "direction": "OUTBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/{petId}/edit",
+        "direction": "INBOUND"
+      }
+    ]
+  },
+  "type": {
+    "variants": [
+      "type",
+      "TYPE"
+    ],
+    "locations": [
+      {
+        "layer": "JPA",
+        "class": "Pet",
+        "field": "type",
+        "annotation": ""
+      },
+      {
+        "layer": "REPO",
+        "class": "PetTypeRepository",
+        "method": "findPetTypes"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/{petId}/edit",
+        "direction": "INBOUND"
+      }
+    ]
+  },
+  "typeId": {
+    "variants": [
+      "typeId",
+      "type_id",
+      "TYPE_ID"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "pets",
+        "column": "type_id",
+        "type": "UINT(4)"
+      }
+    ]
+  },
+  "vetId": {
+    "variants": [
+      "vetId",
+      "vet_id",
+      "VET_ID"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "vet_specialties",
+        "column": "vet_id",
+        "type": "UINT(4)"
+      }
+    ]
+  },
+  "visitDate": {
+    "variants": [
+      "visitDate",
+      "visit_date",
+      "VISIT_DATE"
+    ],
+    "locations": [
+      {
+        "layer": "DB",
+        "table": "visits",
+        "column": "visit_date",
+        "type": "DATE"
+      }
+    ]
+  },
+  "visits": {
+    "variants": [
+      "visits",
+      "VISITS"
+    ],
+    "locations": [
+      {
+        "layer": "JPA",
+        "class": "Pet",
+        "field": "visits",
+        "annotation": ""
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/new",
+        "direction": "INBOUND"
+      },
+      {
+        "layer": "API",
+        "endpoint": "POST /pets/{petId}/edit",
+        "direction": "INBOUND"
+      }
+    ]
+  }
+}
