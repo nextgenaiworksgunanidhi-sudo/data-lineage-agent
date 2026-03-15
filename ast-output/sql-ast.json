@@ -1,0 +1,1886 @@
+{
+  "meta": {
+    "total_files_scanned": 7,
+    "total_parsed": 7,
+    "parse_errors": 0
+  },
+  "summary": {
+    "all_tables": {
+      "vets": {
+        "columns": [
+          {
+            "column": "id",
+            "type": "UINT(4)",
+            "constraints": [
+              "NOT NULL",
+              "AUTO_INCREMENT",
+              "PRIMARY KEY"
+            ]
+          },
+          {
+            "column": "first_name",
+            "type": "VARCHAR(30)",
+            "constraints": []
+          },
+          {
+            "column": "last_name",
+            "type": "VARCHAR(30)",
+            "constraints": []
+          }
+        ]
+      },
+      "specialties": {
+        "columns": [
+          {
+            "column": "id",
+            "type": "UINT(4)",
+            "constraints": [
+              "NOT NULL",
+              "AUTO_INCREMENT",
+              "PRIMARY KEY"
+            ]
+          },
+          {
+            "column": "name",
+            "type": "VARCHAR(80)",
+            "constraints": []
+          }
+        ]
+      },
+      "vet_specialties": {
+        "columns": [
+          {
+            "column": "vet_id",
+            "type": "UINT(4)",
+            "constraints": [
+              "NOT NULL"
+            ]
+          },
+          {
+            "column": "specialty_id",
+            "type": "UINT(4)",
+            "constraints": [
+              "NOT NULL"
+            ]
+          }
+        ]
+      },
+      "types": {
+        "columns": [
+          {
+            "column": "id",
+            "type": "UINT(4)",
+            "constraints": [
+              "NOT NULL",
+              "AUTO_INCREMENT",
+              "PRIMARY KEY"
+            ]
+          },
+          {
+            "column": "name",
+            "type": "VARCHAR(80)",
+            "constraints": []
+          }
+        ]
+      },
+      "owners": {
+        "columns": [
+          {
+            "column": "id",
+            "type": "UINT(4)",
+            "constraints": [
+              "NOT NULL",
+              "AUTO_INCREMENT",
+              "PRIMARY KEY"
+            ]
+          },
+          {
+            "column": "first_name",
+            "type": "VARCHAR(30)",
+            "constraints": []
+          },
+          {
+            "column": "last_name",
+            "type": "VARCHAR(30)",
+            "constraints": []
+          },
+          {
+            "column": "address",
+            "type": "VARCHAR(255)",
+            "constraints": []
+          },
+          {
+            "column": "city",
+            "type": "VARCHAR(80)",
+            "constraints": []
+          },
+          {
+            "column": "telephone",
+            "type": "VARCHAR(20)",
+            "constraints": []
+          }
+        ]
+      },
+      "pets": {
+        "columns": [
+          {
+            "column": "id",
+            "type": "UINT(4)",
+            "constraints": [
+              "NOT NULL",
+              "AUTO_INCREMENT",
+              "PRIMARY KEY"
+            ]
+          },
+          {
+            "column": "name",
+            "type": "VARCHAR(30)",
+            "constraints": []
+          },
+          {
+            "column": "birth_date",
+            "type": "DATE",
+            "constraints": []
+          },
+          {
+            "column": "type_id",
+            "type": "UINT(4)",
+            "constraints": [
+              "NOT NULL"
+            ]
+          },
+          {
+            "column": "owner_id",
+            "type": "UINT(4)",
+            "constraints": []
+          }
+        ]
+      },
+      "visits": {
+        "columns": [
+          {
+            "column": "id",
+            "type": "UINT(4)",
+            "constraints": [
+              "NOT NULL",
+              "AUTO_INCREMENT",
+              "PRIMARY KEY"
+            ]
+          },
+          {
+            "column": "pet_id",
+            "type": "UINT(4)",
+            "constraints": []
+          },
+          {
+            "column": "visit_date",
+            "type": "DATE",
+            "constraints": []
+          },
+          {
+            "column": "description",
+            "type": "VARCHAR(255)",
+            "constraints": []
+          }
+        ]
+      },
+      "petclinic": {
+        "columns": []
+      }
+    },
+    "column_index": {
+      "id": [
+        "vets",
+        "specialties",
+        "types",
+        "owners",
+        "pets",
+        "visits"
+      ],
+      "first_name": [
+        "vets",
+        "owners"
+      ],
+      "last_name": [
+        "vets",
+        "owners"
+      ],
+      "name": [
+        "specialties",
+        "types",
+        "pets"
+      ],
+      "vet_id": [
+        "vet_specialties"
+      ],
+      "specialty_id": [
+        "vet_specialties"
+      ],
+      "address": [
+        "owners"
+      ],
+      "city": [
+        "owners"
+      ],
+      "telephone": [
+        "owners"
+      ],
+      "birth_date": [
+        "pets"
+      ],
+      "type_id": [
+        "pets"
+      ],
+      "owner_id": [
+        "pets"
+      ],
+      "pet_id": [
+        "visits"
+      ],
+      "visit_date": [
+        "visits"
+      ],
+      "description": [
+        "visits"
+      ]
+    },
+    "insert_count": 141,
+    "update_count": 0,
+    "select_count": 0
+  },
+  "raw": [
+    {
+      "file": "repo/spring-petclinic/src/main/resources/db/h2/data.sql",
+      "tables_created": {},
+      "inserts": [
+        {
+          "table": "vets",
+          "columns": [],
+          "values": [
+            "'James'",
+            "'Carter'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [],
+          "values": [
+            "'Helen'",
+            "'Leary'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [],
+          "values": [
+            "'Linda'",
+            "'Douglas'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [],
+          "values": [
+            "'Rafael'",
+            "'Ortega'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [],
+          "values": [
+            "'Henry'",
+            "'Stevens'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [],
+          "values": [
+            "'Sharon'",
+            "'Jenkins'"
+          ]
+        },
+        {
+          "table": "specialties",
+          "columns": [],
+          "values": [
+            "'radiology'"
+          ]
+        },
+        {
+          "table": "specialties",
+          "columns": [],
+          "values": [
+            "'surgery'"
+          ]
+        },
+        {
+          "table": "specialties",
+          "columns": [],
+          "values": [
+            "'dentistry'"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "2",
+            "1"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "3",
+            "2"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "3",
+            "3"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "4",
+            "2"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "5",
+            "1"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [],
+          "values": [
+            "'cat'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [],
+          "values": [
+            "'dog'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [],
+          "values": [
+            "'lizard'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [],
+          "values": [
+            "'snake'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [],
+          "values": [
+            "'bird'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [],
+          "values": [
+            "'hamster'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "'George'",
+            "'Franklin'",
+            "'110 W. Liberty St.'",
+            "'Madison'",
+            "'6085551023'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "'Betty'",
+            "'Davis'",
+            "'638 Cardinal Ave.'",
+            "'Sun Prairie'",
+            "'6085551749'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "'Eduardo'",
+            "'Rodriquez'",
+            "'2693 Commerce St.'",
+            "'McFarland'",
+            "'6085558763'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "'Harold'",
+            "'Davis'",
+            "'563 Friendly St.'",
+            "'Windsor'",
+            "'6085553198'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "'Peter'",
+            "'McTavish'",
+            "'2387 S. Fair Way'",
+            "'Madison'",
+            "'6085552765'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "'Jean'",
+            "'Coleman'",
+            "'105 N. Lake St.'",
+            "'Monona'",
+            "'6085552654'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "'Jeff'",
+            "'Black'",
+            "'1450 Oak Blvd.'",
+            "'Monona'",
+            "'6085555387'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "'Maria'",
+            "'Escobito'",
+            "'345 Maple St.'",
+            "'Madison'",
+            "'6085557683'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "'David'",
+            "'Schroeder'",
+            "'2749 Blackhawk Trail'",
+            "'Madison'",
+            "'6085559435'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "'Carlos'",
+            "'Estaban'",
+            "'2335 Independence La.'",
+            "'Waunakee'",
+            "'6085555487'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'Leo'",
+            "'2010-09-07'",
+            "1",
+            "1"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'Basil'",
+            "'2012-08-06'",
+            "6",
+            "2"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'Rosy'",
+            "'2011-04-17'",
+            "2",
+            "3"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'Jewel'",
+            "'2010-03-07'",
+            "2",
+            "3"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'Iggy'",
+            "'2010-11-30'",
+            "3",
+            "4"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'George'",
+            "'2010-01-20'",
+            "4",
+            "5"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'Samantha'",
+            "'2012-09-04'",
+            "1",
+            "6"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'Max'",
+            "'2012-09-04'",
+            "1",
+            "6"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'Lucky'",
+            "'2011-08-06'",
+            "5",
+            "7"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'Mulligan'",
+            "'2007-02-24'",
+            "2",
+            "8"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'Freddy'",
+            "'2010-03-09'",
+            "5",
+            "9"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'Lucky'",
+            "'2010-06-24'",
+            "2",
+            "10"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "'Sly'",
+            "'2012-06-08'",
+            "1",
+            "10"
+          ]
+        },
+        {
+          "table": "visits",
+          "columns": [],
+          "values": [
+            "7",
+            "'2013-01-01'",
+            "'rabies shot'"
+          ]
+        },
+        {
+          "table": "visits",
+          "columns": [],
+          "values": [
+            "8",
+            "'2013-01-02'",
+            "'rabies shot'"
+          ]
+        },
+        {
+          "table": "visits",
+          "columns": [],
+          "values": [
+            "8",
+            "'2013-01-03'",
+            "'neutered'"
+          ]
+        },
+        {
+          "table": "visits",
+          "columns": [],
+          "values": [
+            "7",
+            "'2013-01-04'",
+            "'spayed'"
+          ]
+        }
+      ],
+      "updates": [],
+      "selects": [],
+      "parse_errors": []
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/resources/db/h2/schema.sql",
+      "tables_created": {
+        "vets": {
+          "columns": []
+        },
+        "specialties": {
+          "columns": []
+        },
+        "vet_specialties": {
+          "columns": [
+            {
+              "column": "vet_id",
+              "type": "INT",
+              "constraints": [
+                "NOT NULL"
+              ]
+            },
+            {
+              "column": "specialty_id",
+              "type": "INT",
+              "constraints": [
+                "NOT NULL"
+              ]
+            }
+          ]
+        },
+        "types": {
+          "columns": []
+        },
+        "owners": {
+          "columns": []
+        },
+        "pets": {
+          "columns": []
+        },
+        "visits": {
+          "columns": []
+        }
+      },
+      "inserts": [],
+      "updates": [],
+      "selects": [],
+      "parse_errors": []
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/resources/db/postgres/data.sql",
+      "tables_created": {},
+      "inserts": [
+        {
+          "table": "vets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'James'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Helen'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Linda'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Rafael'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Henry'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Sharon'"
+          ]
+        },
+        {
+          "table": "specialties",
+          "columns": [
+            "name"
+          ],
+          "values": [
+            "'radiology'"
+          ]
+        },
+        {
+          "table": "specialties",
+          "columns": [
+            "name"
+          ],
+          "values": [
+            "'surgery'"
+          ]
+        },
+        {
+          "table": "specialties",
+          "columns": [
+            "name"
+          ],
+          "values": [
+            "'dentistry'"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "2",
+            "1"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "3",
+            "2"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "3",
+            "3"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "4",
+            "2"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "5",
+            "1"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [
+            "name"
+          ],
+          "values": [
+            "'cat'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [
+            "name"
+          ],
+          "values": [
+            "'dog'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [
+            "name"
+          ],
+          "values": [
+            "'lizard'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [
+            "name"
+          ],
+          "values": [
+            "'snake'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [
+            "name"
+          ],
+          "values": [
+            "'bird'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [
+            "name"
+          ],
+          "values": [
+            "'hamster'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'George'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Betty'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Eduardo'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Harold'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Peter'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Jean'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Jeff'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Maria'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'David'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Carlos'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Leo'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Basil'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Rosy'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Jewel'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Iggy'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'George'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Samantha'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Max'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Lucky'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Mulligan'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Freddy'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Lucky'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "'Sly'"
+          ]
+        },
+        {
+          "table": "visits",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "7"
+          ]
+        },
+        {
+          "table": "visits",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "8"
+          ]
+        },
+        {
+          "table": "visits",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "8"
+          ]
+        },
+        {
+          "table": "visits",
+          "columns": [
+            "id"
+          ],
+          "values": [
+            "7"
+          ]
+        }
+      ],
+      "updates": [],
+      "selects": [],
+      "parse_errors": []
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/resources/db/postgres/schema.sql",
+      "tables_created": {
+        "vets": {
+          "columns": []
+        },
+        "specialties": {
+          "columns": []
+        },
+        "vet_specialties": {
+          "columns": [
+            {
+              "column": "vet_id",
+              "type": "INT",
+              "constraints": [
+                "NOT NULL",
+                "REFERENCES vets (id)"
+              ]
+            },
+            {
+              "column": "specialty_id",
+              "type": "INT",
+              "constraints": [
+                "NOT NULL",
+                "REFERENCES specialties (id)"
+              ]
+            }
+          ]
+        },
+        "types": {
+          "columns": []
+        },
+        "owners": {
+          "columns": []
+        },
+        "pets": {
+          "columns": []
+        },
+        "visits": {
+          "columns": []
+        }
+      },
+      "inserts": [],
+      "updates": [],
+      "selects": [],
+      "parse_errors": []
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/resources/db/mysql/data.sql",
+      "tables_created": {},
+      "inserts": [
+        {
+          "table": "vets",
+          "columns": [],
+          "values": [
+            "1",
+            "'James'",
+            "'Carter'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [],
+          "values": [
+            "2",
+            "'Helen'",
+            "'Leary'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [],
+          "values": [
+            "3",
+            "'Linda'",
+            "'Douglas'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [],
+          "values": [
+            "4",
+            "'Rafael'",
+            "'Ortega'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [],
+          "values": [
+            "5",
+            "'Henry'",
+            "'Stevens'"
+          ]
+        },
+        {
+          "table": "vets",
+          "columns": [],
+          "values": [
+            "6",
+            "'Sharon'",
+            "'Jenkins'"
+          ]
+        },
+        {
+          "table": "specialties",
+          "columns": [],
+          "values": [
+            "1",
+            "'radiology'"
+          ]
+        },
+        {
+          "table": "specialties",
+          "columns": [],
+          "values": [
+            "2",
+            "'surgery'"
+          ]
+        },
+        {
+          "table": "specialties",
+          "columns": [],
+          "values": [
+            "3",
+            "'dentistry'"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "2",
+            "1"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "3",
+            "2"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "3",
+            "3"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "4",
+            "2"
+          ]
+        },
+        {
+          "table": "vet_specialties",
+          "columns": [],
+          "values": [
+            "5",
+            "1"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [],
+          "values": [
+            "1",
+            "'cat'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [],
+          "values": [
+            "2",
+            "'dog'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [],
+          "values": [
+            "3",
+            "'lizard'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [],
+          "values": [
+            "4",
+            "'snake'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [],
+          "values": [
+            "5",
+            "'bird'"
+          ]
+        },
+        {
+          "table": "types",
+          "columns": [],
+          "values": [
+            "6",
+            "'hamster'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "1",
+            "'George'",
+            "'Franklin'",
+            "'110 W. Liberty St.'",
+            "'Madison'",
+            "'6085551023'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "2",
+            "'Betty'",
+            "'Davis'",
+            "'638 Cardinal Ave.'",
+            "'Sun Prairie'",
+            "'6085551749'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "3",
+            "'Eduardo'",
+            "'Rodriquez'",
+            "'2693 Commerce St.'",
+            "'McFarland'",
+            "'6085558763'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "4",
+            "'Harold'",
+            "'Davis'",
+            "'563 Friendly St.'",
+            "'Windsor'",
+            "'6085553198'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "5",
+            "'Peter'",
+            "'McTavish'",
+            "'2387 S. Fair Way'",
+            "'Madison'",
+            "'6085552765'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "6",
+            "'Jean'",
+            "'Coleman'",
+            "'105 N. Lake St.'",
+            "'Monona'",
+            "'6085552654'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "7",
+            "'Jeff'",
+            "'Black'",
+            "'1450 Oak Blvd.'",
+            "'Monona'",
+            "'6085555387'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "8",
+            "'Maria'",
+            "'Escobito'",
+            "'345 Maple St.'",
+            "'Madison'",
+            "'6085557683'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "9",
+            "'David'",
+            "'Schroeder'",
+            "'2749 Blackhawk Trail'",
+            "'Madison'",
+            "'6085559435'"
+          ]
+        },
+        {
+          "table": "owners",
+          "columns": [],
+          "values": [
+            "10",
+            "'Carlos'",
+            "'Estaban'",
+            "'2335 Independence La.'",
+            "'Waunakee'",
+            "'6085555487'"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "1",
+            "'Leo'",
+            "'2000-09-07'",
+            "1",
+            "1"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "2",
+            "'Basil'",
+            "'2002-08-06'",
+            "6",
+            "2"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "3",
+            "'Rosy'",
+            "'2001-04-17'",
+            "2",
+            "3"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "4",
+            "'Jewel'",
+            "'2000-03-07'",
+            "2",
+            "3"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "5",
+            "'Iggy'",
+            "'2000-11-30'",
+            "3",
+            "4"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "6",
+            "'George'",
+            "'2000-01-20'",
+            "4",
+            "5"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "7",
+            "'Samantha'",
+            "'1995-09-04'",
+            "1",
+            "6"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "8",
+            "'Max'",
+            "'1995-09-04'",
+            "1",
+            "6"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "9",
+            "'Lucky'",
+            "'1999-08-06'",
+            "5",
+            "7"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "10",
+            "'Mulligan'",
+            "'1997-02-24'",
+            "2",
+            "8"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "11",
+            "'Freddy'",
+            "'2000-03-09'",
+            "5",
+            "9"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "12",
+            "'Lucky'",
+            "'2000-06-24'",
+            "2",
+            "10"
+          ]
+        },
+        {
+          "table": "pets",
+          "columns": [],
+          "values": [
+            "13",
+            "'Sly'",
+            "'2002-06-08'",
+            "1",
+            "10"
+          ]
+        },
+        {
+          "table": "visits",
+          "columns": [],
+          "values": [
+            "1",
+            "7",
+            "'2010-03-04'",
+            "'rabies shot'"
+          ]
+        },
+        {
+          "table": "visits",
+          "columns": [],
+          "values": [
+            "2",
+            "8",
+            "'2011-03-04'",
+            "'rabies shot'"
+          ]
+        },
+        {
+          "table": "visits",
+          "columns": [],
+          "values": [
+            "3",
+            "8",
+            "'2009-06-04'",
+            "'neutered'"
+          ]
+        },
+        {
+          "table": "visits",
+          "columns": [],
+          "values": [
+            "4",
+            "7",
+            "'2008-09-04'",
+            "'spayed'"
+          ]
+        }
+      ],
+      "updates": [],
+      "selects": [],
+      "parse_errors": []
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/resources/db/mysql/schema.sql",
+      "tables_created": {
+        "vets": {
+          "columns": [
+            {
+              "column": "id",
+              "type": "UINT(4)",
+              "constraints": [
+                "NOT NULL",
+                "AUTO_INCREMENT",
+                "PRIMARY KEY"
+              ]
+            },
+            {
+              "column": "first_name",
+              "type": "VARCHAR(30)",
+              "constraints": []
+            },
+            {
+              "column": "last_name",
+              "type": "VARCHAR(30)",
+              "constraints": []
+            }
+          ]
+        },
+        "specialties": {
+          "columns": [
+            {
+              "column": "id",
+              "type": "UINT(4)",
+              "constraints": [
+                "NOT NULL",
+                "AUTO_INCREMENT",
+                "PRIMARY KEY"
+              ]
+            },
+            {
+              "column": "name",
+              "type": "VARCHAR(80)",
+              "constraints": []
+            }
+          ]
+        },
+        "vet_specialties": {
+          "columns": [
+            {
+              "column": "vet_id",
+              "type": "UINT(4)",
+              "constraints": [
+                "NOT NULL"
+              ]
+            },
+            {
+              "column": "specialty_id",
+              "type": "UINT(4)",
+              "constraints": [
+                "NOT NULL"
+              ]
+            }
+          ]
+        },
+        "types": {
+          "columns": [
+            {
+              "column": "id",
+              "type": "UINT(4)",
+              "constraints": [
+                "NOT NULL",
+                "AUTO_INCREMENT",
+                "PRIMARY KEY"
+              ]
+            },
+            {
+              "column": "name",
+              "type": "VARCHAR(80)",
+              "constraints": []
+            }
+          ]
+        },
+        "owners": {
+          "columns": [
+            {
+              "column": "id",
+              "type": "UINT(4)",
+              "constraints": [
+                "NOT NULL",
+                "AUTO_INCREMENT",
+                "PRIMARY KEY"
+              ]
+            },
+            {
+              "column": "first_name",
+              "type": "VARCHAR(30)",
+              "constraints": []
+            },
+            {
+              "column": "last_name",
+              "type": "VARCHAR(30)",
+              "constraints": []
+            },
+            {
+              "column": "address",
+              "type": "VARCHAR(255)",
+              "constraints": []
+            },
+            {
+              "column": "city",
+              "type": "VARCHAR(80)",
+              "constraints": []
+            },
+            {
+              "column": "telephone",
+              "type": "VARCHAR(20)",
+              "constraints": []
+            }
+          ]
+        },
+        "pets": {
+          "columns": [
+            {
+              "column": "id",
+              "type": "UINT(4)",
+              "constraints": [
+                "NOT NULL",
+                "AUTO_INCREMENT",
+                "PRIMARY KEY"
+              ]
+            },
+            {
+              "column": "name",
+              "type": "VARCHAR(30)",
+              "constraints": []
+            },
+            {
+              "column": "birth_date",
+              "type": "DATE",
+              "constraints": []
+            },
+            {
+              "column": "type_id",
+              "type": "UINT(4)",
+              "constraints": [
+                "NOT NULL"
+              ]
+            },
+            {
+              "column": "owner_id",
+              "type": "UINT(4)",
+              "constraints": []
+            }
+          ]
+        },
+        "visits": {
+          "columns": [
+            {
+              "column": "id",
+              "type": "UINT(4)",
+              "constraints": [
+                "NOT NULL",
+                "AUTO_INCREMENT",
+                "PRIMARY KEY"
+              ]
+            },
+            {
+              "column": "pet_id",
+              "type": "UINT(4)",
+              "constraints": []
+            },
+            {
+              "column": "visit_date",
+              "type": "DATE",
+              "constraints": []
+            },
+            {
+              "column": "description",
+              "type": "VARCHAR(255)",
+              "constraints": []
+            }
+          ]
+        }
+      },
+      "inserts": [],
+      "updates": [],
+      "selects": [],
+      "parse_errors": []
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/resources/db/mysql/user.sql",
+      "tables_created": {
+        "petclinic": {
+          "columns": []
+        }
+      },
+      "inserts": [],
+      "updates": [],
+      "selects": [],
+      "parse_errors": []
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,4341 @@
+{
+  "meta": {
+    "total_files_scanned": 47,
+    "total_parsed": 46,
+    "parse_errors": 1
+  },
+  "summary": {
+    "entities": [
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/vet/Vet.java",
+        "class": "Vet",
+        "annotations": [
+          "Entity",
+          "Table"
+        ],
+        "table": "vets",
+        "fields": [
+          {
+            "name": "id",
+            "type": "Integer",
+            "annotations": [
+              "Id",
+              "GeneratedValue"
+            ]
+          },
+          {
+            "name": "firstName",
+            "type": "String",
+            "annotations": [
+              "Column",
+              "NotBlank"
+            ]
+          },
+          {
+            "name": "lastName",
+            "type": "String",
+            "annotations": [
+              "Column",
+              "NotBlank"
+            ]
+          },
+          {
+            "name": "specialties",
+            "type": "Set<Specialty>",
+            "annotations": [
+              "ManyToMany",
+              "JoinTable"
+            ],
+            "relationship": "ManyToMany"
+          }
+        ]
+      },
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/vet/Specialty.java",
+        "class": "Specialty",
+        "annotations": [
+          "Entity",
+          "Table"
+        ],
+        "table": "specialties",
+        "fields": [
+          {
+            "name": "id",
+            "type": "Integer",
+            "annotations": [
+              "Id",
+              "GeneratedValue"
+            ]
+          },
+          {
+            "name": "name",
+            "type": "String",
+            "annotations": [
+              "Column",
+              "NotBlank"
+            ]
+          }
+        ]
+      },
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+        "class": "Pet",
+        "annotations": [
+          "Entity",
+          "Table"
+        ],
+        "table": "pets",
+        "fields": [
+          {
+            "name": "id",
+            "type": "Integer",
+            "annotations": [
+              "Id",
+              "GeneratedValue"
+            ]
+          },
+          {
+            "name": "name",
+            "type": "String",
+            "annotations": [
+              "Column",
+              "NotBlank"
+            ]
+          },
+          {
+            "name": "birthDate",
+            "type": "LocalDate",
+            "annotations": [
+              "Column",
+              "DateTimeFormat"
+            ]
+          },
+          {
+            "name": "type",
+            "type": "PetType",
+            "annotations": [
+              "ManyToOne",
+              "JoinColumn"
+            ],
+            "relationship": "ManyToOne",
+            "join_column": "type_id"
+          },
+          {
+            "name": "visits",
+            "type": "Set<Visit>",
+            "annotations": [
+              "OneToMany",
+              "JoinColumn",
+              "OrderBy"
+            ],
+            "relationship": "OneToMany",
+            "join_column": "pet_id"
+          }
+        ]
+      },
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+        "class": "Owner",
+        "annotations": [
+          "Entity",
+          "Table"
+        ],
+        "table": "owners",
+        "fields": [
+          {
+            "name": "id",
+            "type": "Integer",
+            "annotations": [
+              "Id",
+              "GeneratedValue"
+            ]
+          },
+          {
+            "name": "firstName",
+            "type": "String",
+            "annotations": [
+              "Column",
+              "NotBlank"
+            ]
+          },
+          {
+            "name": "lastName",
+            "type": "String",
+            "annotations": [
+              "Column",
+              "NotBlank"
+            ]
+          },
+          {
+            "name": "address",
+            "type": "String",
+            "annotations": [
+              "Column",
+              "NotBlank"
+            ]
+          },
+          {
+            "name": "city",
+            "type": "String",
+            "annotations": [
+              "Column",
+              "NotBlank"
+            ]
+          },
+          {
+            "name": "telephone",
+            "type": "String",
+            "annotations": [
+              "Column",
+              "NotBlank",
+              "Pattern"
+            ]
+          },
+          {
+            "name": "pets",
+            "type": "List<Pet>",
+            "annotations": [
+              "OneToMany",
+              "JoinColumn",
+              "OrderBy"
+            ],
+            "relationship": "OneToMany",
+            "join_column": "owner_id"
+          }
+        ]
+      },
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/Visit.java",
+        "class": "Visit",
+        "annotations": [
+          "Entity",
+          "Table"
+        ],
+        "table": "visits",
+        "fields": [
+          {
+            "name": "id",
+            "type": "Integer",
+            "annotations": [
+              "Id",
+              "GeneratedValue"
+            ]
+          },
+          {
+            "name": "date",
+            "type": "LocalDate",
+            "annotations": [
+              "Column",
+              "DateTimeFormat"
+            ],
+            "column_name": "visit_date"
+          },
+          {
+            "name": "description",
+            "type": "String",
+            "annotations": [
+              "NotBlank"
+            ]
+          }
+        ]
+      },
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/PetType.java",
+        "class": "PetType",
+        "annotations": [
+          "Entity",
+          "Table"
+        ],
+        "table": "types",
+        "fields": [
+          {
+            "name": "id",
+            "type": "Integer",
+            "annotations": [
+              "Id",
+              "GeneratedValue"
+            ]
+          },
+          {
+            "name": "name",
+            "type": "String",
+            "annotations": [
+              "Column",
+              "NotBlank"
+            ]
+          }
+        ]
+      }
+    ],
+    "repositories": [
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/vet/VetRepository.java",
+        "class": "VetRepository",
+        "annotations": [],
+        "extends": [
+          "Repository"
+        ],
+        "methods": [
+          {
+            "name": "findAll",
+            "return_type": "Collection<Vet>",
+            "parameters": [],
+            "annotations": [
+              "Cacheable",
+              "Transactional"
+            ]
+          },
+          {
+            "name": "findAll",
+            "return_type": "Page<Vet>",
+            "parameters": [
+              {
+                "name": "pageable",
+                "type": "Pageable"
+              }
+            ],
+            "annotations": [
+              "Cacheable",
+              "Transactional"
+            ]
+          }
+        ]
+      },
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java",
+        "class": "OwnerRepository",
+        "annotations": [],
+        "extends": [
+          "JpaRepository"
+        ],
+        "methods": [
+          {
+            "name": "findByLastNameStartingWith",
+            "return_type": "Page<Owner>",
+            "parameters": [
+              {
+                "name": "lastName",
+                "type": "String"
+              },
+              {
+                "name": "pageable",
+                "type": "Pageable"
+              }
+            ],
+            "annotations": []
+          },
+          {
+            "name": "findById",
+            "return_type": "Optional<Owner>",
+            "parameters": [
+              {
+                "name": "id",
+                "type": "Integer"
+              }
+            ],
+            "annotations": []
+          }
+        ]
+      },
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/PetTypeRepository.java",
+        "class": "PetTypeRepository",
+        "annotations": [],
+        "extends": [
+          "JpaRepository"
+        ],
+        "methods": [
+          {
+            "name": "findPetTypes",
+            "return_type": "List<PetType>",
+            "parameters": [],
+            "annotations": [
+              "Query"
+            ],
+            "query": "SELECT ptype FROM PetType ptype ORDER BY ptype.name"
+          }
+        ]
+      }
+    ],
+    "services": [],
+    "controllers": [
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+        "class": "VetController",
+        "annotations": [
+          "Controller"
+        ],
+        "methods": [
+          {
+            "name": "showVetList",
+            "return_type": "String",
+            "parameters": [
+              {
+                "name": "page",
+                "type": "int"
+              },
+              {
+                "name": "model",
+                "type": "Model"
+              }
+            ],
+            "annotations": [
+              "GetMapping"
+            ],
+            "http_method": "GET",
+            "path": "/vets.html"
+          },
+          {
+            "name": "addPaginationModel",
+            "return_type": "String",
+            "parameters": [
+              {
+                "name": "page",
+                "type": "int"
+              },
+              {
+                "name": "paginated",
+                "type": "Page<Vet>"
+              },
+              {
+                "name": "model",
+                "type": "Model"
+              }
+            ],
+            "annotations": []
+          },
+          {
+            "name": "findPaginated",
+            "return_type": "Page<Vet>",
+            "parameters": [
+              {
+                "name": "page",
+                "type": "int"
+              }
+            ],
+            "annotations": []
+          },
+          {
+            "name": "showResourcesVetList",
+            "return_type": "Vets",
+            "parameters": [],
+            "annotations": [
+              "ResponseBody",
+              "GetMapping"
+            ],
+            "http_method": "GET"
+          }
+        ]
+      },
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+        "class": "VisitController",
+        "annotations": [
+          "Controller"
+        ],
+        "methods": [
+          {
+            "name": "setAllowedFields",
+            "return_type": "void",
+            "parameters": [
+              {
+                "name": "dataBinder",
+                "type": "WebDataBinder"
+              }
+            ],
+            "annotations": [
+              "InitBinder"
+            ]
+          },
+          {
+            "name": "loadPetWithVisit",
+            "return_type": "Visit",
+            "parameters": [
+              {
+                "name": "ownerId",
+                "type": "int"
+              },
+              {
+                "name": "petId",
+                "type": "int"
+              },
+              {
+                "name": "model",
+                "type": "Map<String, Object>"
+              }
+            ],
+            "annotations": [
+              "ModelAttribute"
+            ]
+          },
+          {
+            "name": "initNewVisitForm",
+            "return_type": "String",
+            "parameters": [],
+            "annotations": [
+              "GetMapping"
+            ],
+            "http_method": "GET",
+            "path": "/owners/{ownerId}/pets/{petId}/visits/new"
+          },
+          {
+            "name": "processNewVisitForm",
+            "return_type": "String",
+            "parameters": [
+              {
+                "name": "owner",
+                "type": "Owner"
+              },
+              {
+                "name": "petId",
+                "type": "int"
+              },
+              {
+                "name": "visit",
+                "type": "Visit"
+              },
+              {
+                "name": "result",
+                "type": "BindingResult"
+              },
+              {
+                "name": "redirectAttributes",
+                "type": "RedirectAttributes"
+              }
+            ],
+            "annotations": [
+              "PostMapping"
+            ],
+            "http_method": "POST",
+            "path": "/owners/{ownerId}/pets/{petId}/visits/new"
+          }
+        ]
+      },
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "class": "OwnerController",
+        "annotations": [
+          "Controller"
+        ],
+        "methods": [
+          {
+            "name": "setAllowedFields",
+            "return_type": "void",
+            "parameters": [
+              {
+                "name": "dataBinder",
+                "type": "WebDataBinder"
+              }
+            ],
+            "annotations": [
+              "InitBinder"
+            ]
+          },
+          {
+            "name": "findOwner",
+            "return_type": "Owner",
+            "parameters": [
+              {
+                "name": "ownerId",
+                "type": "Integer"
+              }
+            ],
+            "annotations": [
+              "ModelAttribute"
+            ]
+          },
+          {
+            "name": "initCreationForm",
+            "return_type": "String",
+            "parameters": [],
+            "annotations": [
+              "GetMapping"
+            ],
+            "http_method": "GET",
+            "path": "/owners/new"
+          },
+          {
+            "name": "processCreationForm",
+            "return_type": "String",
+            "parameters": [
+              {
+                "name": "owner",
+                "type": "Owner"
+              },
+              {
+                "name": "result",
+                "type": "BindingResult"
+              },
+              {
+                "name": "redirectAttributes",
+                "type": "RedirectAttributes"
+              }
+            ],
+            "annotations": [
+              "PostMapping"
+            ],
+            "http_method": "POST",
+            "path": "/owners/new"
+          },
+          {
+            "name": "initFindForm",
+            "return_type": "String",
+            "parameters": [],
+            "annotations": [
+              "GetMapping"
+            ],
+            "http_method": "GET",
+            "path": "/owners/find"
+          },
+          {
+            "name": "processFindForm",
+            "return_type": "String",
+            "parameters": [
+              {
+                "name": "page",
+                "type": "int"
+              },
+              {
+                "name": "owner",
+                "type": "Owner"
+              },
+              {
+                "name": "result",
+                "type": "BindingResult"
+              },
+              {
+                "name": "model",
+                "type": "Model"
+              }
+            ],
+            "annotations": [
+              "GetMapping"
+            ],
+            "http_method": "GET",
+            "path": "/owners"
+          },
+          {
+            "name": "addPaginationModel",
+            "return_type": "String",
+            "parameters": [
+              {
+                "name": "page",
+                "type": "int"
+              },
+              {
+                "name": "model",
+                "type": "Model"
+              },
+              {
+                "name": "paginated",
+                "type": "Page<Owner>"
+              }
+            ],
+            "annotations": []
+          },
+          {
+            "name": "findPaginatedForOwnersLastName",
+            "return_type": "Page<Owner>",
+            "parameters": [
+              {
+                "name": "page",
+                "type": "int"
+              },
+              {
+                "name": "lastname",
+                "type": "String"
+              }
+            ],
+            "annotations": []
+          },
+          {
+            "name": "initUpdateOwnerForm",
+            "return_type": "String",
+            "parameters": [],
+            "annotations": [
+              "GetMapping"
+            ],
+            "http_method": "GET",
+            "path": "/owners/{ownerId}/edit"
+          },
+          {
+            "name": "processUpdateOwnerForm",
+            "return_type": "String",
+            "parameters": [
+              {
+                "name": "owner",
+                "type": "Owner"
+              },
+              {
+                "name": "result",
+                "type": "BindingResult"
+              },
+              {
+                "name": "ownerId",
+                "type": "int"
+              },
+              {
+                "name": "redirectAttributes",
+                "type": "RedirectAttributes"
+              }
+            ],
+            "annotations": [
+              "PostMapping"
+            ],
+            "http_method": "POST",
+            "path": "/owners/{ownerId}/edit"
+          },
+          {
+            "name": "showOwner",
+            "return_type": "ModelAndView",
+            "parameters": [
+              {
+                "name": "ownerId",
+                "type": "int"
+              }
+            ],
+            "annotations": [
+              "GetMapping"
+            ],
+            "http_method": "GET",
+            "path": "/owners/{ownerId}"
+          }
+        ]
+      },
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+        "class": "PetController",
+        "annotations": [
+          "RequestMapping",
+          "Controller"
+        ],
+        "methods": [
+          {
+            "name": "populatePetTypes",
+            "return_type": "Collection<PetType>",
+            "parameters": [],
+            "annotations": [
+              "ModelAttribute"
+            ]
+          },
+          {
+            "name": "findOwner",
+            "return_type": "Owner",
+            "parameters": [
+              {
+                "name": "ownerId",
+                "type": "int"
+              }
+            ],
+            "annotations": [
+              "ModelAttribute"
+            ]
+          },
+          {
+            "name": "findPet",
+            "return_type": "Pet",
+            "parameters": [
+              {
+                "name": "ownerId",
+                "type": "int"
+              },
+              {
+                "name": "petId",
+                "type": "Integer"
+              }
+            ],
+            "annotations": [
+              "ModelAttribute"
+            ]
+          },
+          {
+            "name": "initOwnerBinder",
+            "return_type": "void",
+            "parameters": [
+              {
+                "name": "dataBinder",
+                "type": "WebDataBinder"
+              }
+            ],
+            "annotations": [
+              "InitBinder"
+            ]
+          },
+          {
+            "name": "initPetBinder",
+            "return_type": "void",
+            "parameters": [
+              {
+                "name": "dataBinder",
+                "type": "WebDataBinder"
+              }
+            ],
+            "annotations": [
+              "InitBinder"
+            ]
+          },
+          {
+            "name": "initCreationForm",
+            "return_type": "String",
+            "parameters": [
+              {
+                "name": "owner",
+                "type": "Owner"
+              },
+              {
+                "name": "model",
+                "type": "ModelMap"
+              }
+            ],
+            "annotations": [
+              "GetMapping"
+            ],
+            "http_method": "GET",
+            "path": "/pets/new"
+          },
+          {
+            "name": "processCreationForm",
+            "return_type": "String",
+            "parameters": [
+              {
+                "name": "owner",
+                "type": "Owner"
+              },
+              {
+                "name": "pet",
+                "type": "Pet"
+              },
+              {
+                "name": "result",
+                "type": "BindingResult"
+              },
+              {
+                "name": "redirectAttributes",
+                "type": "RedirectAttributes"
+              }
+            ],
+            "annotations": [
+              "PostMapping"
+            ],
+            "http_method": "POST",
+            "path": "/pets/new"
+          },
+          {
+            "name": "initUpdateForm",
+            "return_type": "String",
+            "parameters": [],
+            "annotations": [
+              "GetMapping"
+            ],
+            "http_method": "GET",
+            "path": "/pets/{petId}/edit"
+          },
+          {
+            "name": "processUpdateForm",
+            "return_type": "String",
+            "parameters": [
+              {
+                "name": "owner",
+                "type": "Owner"
+              },
+              {
+                "name": "pet",
+                "type": "Pet"
+              },
+              {
+                "name": "result",
+                "type": "BindingResult"
+              },
+              {
+                "name": "redirectAttributes",
+                "type": "RedirectAttributes"
+              }
+            ],
+            "annotations": [
+              "PostMapping"
+            ],
+            "http_method": "POST",
+            "path": "/pets/{petId}/edit"
+          },
+          {
+            "name": "updatePetDetails",
+            "return_type": "void",
+            "parameters": [
+              {
+                "name": "owner",
+                "type": "Owner"
+              },
+              {
+                "name": "pet",
+                "type": "Pet"
+              }
+            ],
+            "annotations": []
+          }
+        ]
+      },
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/system/WelcomeController.java",
+        "class": "WelcomeController",
+        "annotations": [
+          "Controller"
+        ],
+        "methods": [
+          {
+            "name": "welcome",
+            "return_type": "String",
+            "parameters": [],
+            "annotations": [
+              "GetMapping"
+            ],
+            "http_method": "GET",
+            "path": "/"
+          }
+        ]
+      },
+      {
+        "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/system/CrashController.java",
+        "class": "CrashController",
+        "annotations": [
+          "Controller"
+        ],
+        "methods": [
+          {
+            "name": "triggerException",
+            "return_type": "String",
+            "parameters": [],
+            "annotations": [
+              "GetMapping"
+            ],
+            "http_method": "GET",
+            "path": "/oups"
+          }
+        ]
+      }
+    ]
+  },
+  "raw": [
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/PetClinicRuntimeHints.java",
+      "package": "org.springframework.samples.petclinic",
+      "imports": [
+        "org.springframework.aot.hint.RuntimeHints",
+        "org.springframework.aot.hint.RuntimeHintsRegistrar",
+        "org.springframework.samples.petclinic.model.BaseEntity",
+        "org.springframework.samples.petclinic.model.Person",
+        "org.springframework.samples.petclinic.vet.Vet"
+      ],
+      "classes": [
+        {
+          "name": "PetClinicRuntimeHints",
+          "layer": "other",
+          "annotations": [],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "registerHints",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "hints",
+                  "type": "RuntimeHints"
+                },
+                {
+                  "name": "classLoader",
+                  "type": "ClassLoader"
+                }
+              ],
+              "annotations": [
+                "Override"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/package-info.java",
+      "package": "org.springframework.samples.petclinic",
+      "imports": [],
+      "classes": []
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java",
+      "package": "org.springframework.samples.petclinic",
+      "imports": [
+        "org.springframework.boot.SpringApplication",
+        "org.springframework.boot.autoconfigure.SpringBootApplication",
+        "org.springframework.context.annotation.ImportRuntimeHints"
+      ],
+      "classes": [
+        {
+          "name": "PetClinicApplication",
+          "layer": "other",
+          "annotations": [
+            "ImportRuntimeHints",
+            "SpringBootApplication"
+          ],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "main",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": "String"
+                }
+              ],
+              "annotations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/vet/Vet.java",
+      "package": "org.springframework.samples.petclinic.vet",
+      "imports": [
+        "java.util.Comparator",
+        "java.util.HashSet",
+        "java.util.List",
+        "java.util.Set",
+        "java.util.stream.Collectors",
+        "org.springframework.samples.petclinic.model.NamedEntity",
+        "org.springframework.samples.petclinic.model.Person",
+        "jakarta.persistence.Entity",
+        "jakarta.persistence.FetchType",
+        "jakarta.persistence.JoinColumn",
+        "jakarta.persistence.JoinTable",
+        "jakarta.persistence.ManyToMany",
+        "jakarta.persistence.Table",
+        "jakarta.xml.bind.annotation.XmlElement"
+      ],
+      "classes": [
+        {
+          "name": "Vet",
+          "layer": "entity",
+          "annotations": [
+            "Entity",
+            "Table"
+          ],
+          "extends": "Person",
+          "fields": [
+            {
+              "name": "specialties",
+              "type": "Set<Specialty>",
+              "annotations": [
+                "ManyToMany",
+                "JoinTable"
+              ],
+              "relationship": "ManyToMany"
+            }
+          ],
+          "methods": [
+            {
+              "name": "getSpecialtiesInternal",
+              "return_type": "Set<Specialty>",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "getSpecialties",
+              "return_type": "List<Specialty>",
+              "parameters": [],
+              "annotations": [
+                "XmlElement"
+              ]
+            },
+            {
+              "name": "getNrOfSpecialties",
+              "return_type": "int",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "addSpecialty",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "specialty",
+                  "type": "Specialty"
+                }
+              ],
+              "annotations": []
+            }
+          ],
+          "table_name": "vets"
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/vet/Specialty.java",
+      "package": "org.springframework.samples.petclinic.vet",
+      "imports": [
+        "org.springframework.samples.petclinic.model.NamedEntity",
+        "jakarta.persistence.Entity",
+        "jakarta.persistence.Table"
+      ],
+      "classes": [
+        {
+          "name": "Specialty",
+          "layer": "entity",
+          "annotations": [
+            "Entity",
+            "Table"
+          ],
+          "extends": "NamedEntity",
+          "fields": [],
+          "methods": [],
+          "table_name": "specialties"
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+      "package": "org.springframework.samples.petclinic.vet",
+      "imports": [
+        "java.util.List",
+        "org.springframework.data.domain.Page",
+        "org.springframework.data.domain.PageRequest",
+        "org.springframework.data.domain.Pageable",
+        "org.springframework.stereotype.Controller",
+        "org.springframework.ui.Model",
+        "org.springframework.web.bind.annotation.GetMapping",
+        "org.springframework.web.bind.annotation.RequestParam",
+        "org.springframework.web.bind.annotation.ResponseBody"
+      ],
+      "classes": [
+        {
+          "name": "VetController",
+          "layer": "controller",
+          "annotations": [
+            "Controller"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "vetRepository",
+              "type": "VetRepository",
+              "annotations": []
+            }
+          ],
+          "methods": [
+            {
+              "name": "showVetList",
+              "return_type": "String",
+              "parameters": [
+                {
+                  "name": "page",
+                  "type": "int"
+                },
+                {
+                  "name": "model",
+                  "type": "Model"
+                }
+              ],
+              "annotations": [
+                "GetMapping"
+              ],
+              "http_method": "GET",
+              "path": "/vets.html"
+            },
+            {
+              "name": "addPaginationModel",
+              "return_type": "String",
+              "parameters": [
+                {
+                  "name": "page",
+                  "type": "int"
+                },
+                {
+                  "name": "paginated",
+                  "type": "Page<Vet>"
+                },
+                {
+                  "name": "model",
+                  "type": "Model"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "findPaginated",
+              "return_type": "Page<Vet>",
+              "parameters": [
+                {
+                  "name": "page",
+                  "type": "int"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "showResourcesVetList",
+              "return_type": "Vets",
+              "parameters": [],
+              "annotations": [
+                "ResponseBody",
+                "GetMapping"
+              ],
+              "http_method": "GET"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/vet/VetRepository.java",
+      "package": "org.springframework.samples.petclinic.vet",
+      "imports": [
+        "org.springframework.cache.annotation.Cacheable",
+        "org.springframework.dao.DataAccessException",
+        "org.springframework.data.domain.Page",
+        "org.springframework.data.domain.Pageable",
+        "org.springframework.data.repository.Repository",
+        "org.springframework.transaction.annotation.Transactional",
+        "java.util.Collection"
+      ],
+      "classes": [
+        {
+          "name": "VetRepository",
+          "layer": "repository",
+          "annotations": [],
+          "extends": [
+            "Repository"
+          ],
+          "methods": [
+            {
+              "name": "findAll",
+              "return_type": "Collection<Vet>",
+              "parameters": [],
+              "annotations": [
+                "Cacheable",
+                "Transactional"
+              ]
+            },
+            {
+              "name": "findAll",
+              "return_type": "Page<Vet>",
+              "parameters": [
+                {
+                  "name": "pageable",
+                  "type": "Pageable"
+                }
+              ],
+              "annotations": [
+                "Cacheable",
+                "Transactional"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/vet/Vets.java",
+      "package": "org.springframework.samples.petclinic.vet",
+      "imports": [
+        "java.util.ArrayList",
+        "java.util.List",
+        "jakarta.xml.bind.annotation.XmlElement",
+        "jakarta.xml.bind.annotation.XmlRootElement"
+      ],
+      "classes": [
+        {
+          "name": "Vets",
+          "layer": "other",
+          "annotations": [
+            "XmlRootElement"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "vets",
+              "type": "List<Vet>",
+              "annotations": []
+            }
+          ],
+          "methods": [
+            {
+              "name": "getVetList",
+              "return_type": "List<Vet>",
+              "parameters": [],
+              "annotations": [
+                "XmlElement"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/vet/package-info.java",
+      "package": "org.springframework.samples.petclinic.vet",
+      "imports": [],
+      "classes": []
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "java.time.LocalDate",
+        "java.util.Collection",
+        "java.util.LinkedHashSet",
+        "java.util.Set",
+        "org.springframework.format.annotation.DateTimeFormat",
+        "org.springframework.samples.petclinic.model.NamedEntity",
+        "jakarta.persistence.CascadeType",
+        "jakarta.persistence.Column",
+        "jakarta.persistence.Entity",
+        "jakarta.persistence.FetchType",
+        "jakarta.persistence.JoinColumn",
+        "jakarta.persistence.ManyToOne",
+        "jakarta.persistence.OneToMany",
+        "jakarta.persistence.OrderBy",
+        "jakarta.persistence.Table"
+      ],
+      "classes": [
+        {
+          "name": "Pet",
+          "layer": "entity",
+          "annotations": [
+            "Entity",
+            "Table"
+          ],
+          "extends": "NamedEntity",
+          "fields": [
+            {
+              "name": "birthDate",
+              "type": "LocalDate",
+              "annotations": [
+                "Column",
+                "DateTimeFormat"
+              ]
+            },
+            {
+              "name": "type",
+              "type": "PetType",
+              "annotations": [
+                "ManyToOne",
+                "JoinColumn"
+              ],
+              "relationship": "ManyToOne",
+              "join_column": "type_id"
+            },
+            {
+              "name": "visits",
+              "type": "Set<Visit>",
+              "annotations": [
+                "OneToMany",
+                "JoinColumn",
+                "OrderBy"
+              ],
+              "relationship": "OneToMany",
+              "join_column": "pet_id"
+            }
+          ],
+          "methods": [
+            {
+              "name": "setBirthDate",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "birthDate",
+                  "type": "LocalDate"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "getBirthDate",
+              "return_type": "LocalDate",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "getType",
+              "return_type": "PetType",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "setType",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": "PetType"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "getVisits",
+              "return_type": "Collection<Visit>",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "addVisit",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "visit",
+                  "type": "Visit"
+                }
+              ],
+              "annotations": []
+            }
+          ],
+          "table_name": "pets"
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "java.util.Map",
+        "java.util.Optional",
+        "org.springframework.stereotype.Controller",
+        "org.springframework.validation.BindingResult",
+        "org.springframework.web.bind.WebDataBinder",
+        "org.springframework.web.bind.annotation.GetMapping",
+        "org.springframework.web.bind.annotation.InitBinder",
+        "org.springframework.web.bind.annotation.ModelAttribute",
+        "org.springframework.web.bind.annotation.PathVariable",
+        "org.springframework.web.bind.annotation.PostMapping",
+        "jakarta.validation.Valid",
+        "org.springframework.web.servlet.mvc.support.RedirectAttributes"
+      ],
+      "classes": [
+        {
+          "name": "VisitController",
+          "layer": "controller",
+          "annotations": [
+            "Controller"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "owners",
+              "type": "OwnerRepository",
+              "annotations": []
+            }
+          ],
+          "methods": [
+            {
+              "name": "setAllowedFields",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "dataBinder",
+                  "type": "WebDataBinder"
+                }
+              ],
+              "annotations": [
+                "InitBinder"
+              ]
+            },
+            {
+              "name": "loadPetWithVisit",
+              "return_type": "Visit",
+              "parameters": [
+                {
+                  "name": "ownerId",
+                  "type": "int"
+                },
+                {
+                  "name": "petId",
+                  "type": "int"
+                },
+                {
+                  "name": "model",
+                  "type": "Map<String, Object>"
+                }
+              ],
+              "annotations": [
+                "ModelAttribute"
+              ]
+            },
+            {
+              "name": "initNewVisitForm",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": [
+                "GetMapping"
+              ],
+              "http_method": "GET",
+              "path": "/owners/{ownerId}/pets/{petId}/visits/new"
+            },
+            {
+              "name": "processNewVisitForm",
+              "return_type": "String",
+              "parameters": [
+                {
+                  "name": "owner",
+                  "type": "Owner"
+                },
+                {
+                  "name": "petId",
+                  "type": "int"
+                },
+                {
+                  "name": "visit",
+                  "type": "Visit"
+                },
+                {
+                  "name": "result",
+                  "type": "BindingResult"
+                },
+                {
+                  "name": "redirectAttributes",
+                  "type": "RedirectAttributes"
+                }
+              ],
+              "annotations": [
+                "PostMapping"
+              ],
+              "http_method": "POST",
+              "path": "/owners/{ownerId}/pets/{petId}/visits/new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/PetTypeFormatter.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "org.springframework.format.Formatter",
+        "org.springframework.stereotype.Component",
+        "java.text.ParseException",
+        "java.util.Collection",
+        "java.util.Locale",
+        "java.util.Objects"
+      ],
+      "classes": [
+        {
+          "name": "PetTypeFormatter",
+          "layer": "other",
+          "annotations": [
+            "Component"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "types",
+              "type": "PetTypeRepository",
+              "annotations": []
+            }
+          ],
+          "methods": [
+            {
+              "name": "print",
+              "return_type": "String",
+              "parameters": [
+                {
+                  "name": "petType",
+                  "type": "PetType"
+                },
+                {
+                  "name": "locale",
+                  "type": "Locale"
+                }
+              ],
+              "annotations": [
+                "Override"
+              ]
+            },
+            {
+              "name": "parse",
+              "return_type": "PetType",
+              "parameters": [
+                {
+                  "name": "text",
+                  "type": "String"
+                },
+                {
+                  "name": "locale",
+                  "type": "Locale"
+                }
+              ],
+              "annotations": [
+                "Override"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "java.util.Optional",
+        "org.springframework.data.domain.Page",
+        "org.springframework.data.domain.Pageable",
+        "org.springframework.data.jpa.repository.JpaRepository"
+      ],
+      "classes": [
+        {
+          "name": "OwnerRepository",
+          "layer": "repository",
+          "annotations": [],
+          "extends": [
+            "JpaRepository"
+          ],
+          "methods": [
+            {
+              "name": "findByLastNameStartingWith",
+              "return_type": "Page<Owner>",
+              "parameters": [
+                {
+                  "name": "lastName",
+                  "type": "String"
+                },
+                {
+                  "name": "pageable",
+                  "type": "Pageable"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "findById",
+              "return_type": "Optional<Owner>",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "Integer"
+                }
+              ],
+              "annotations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "java.util.List",
+        "java.util.Objects",
+        "java.util.Optional",
+        "org.springframework.data.domain.Page",
+        "org.springframework.data.domain.PageRequest",
+        "org.springframework.data.domain.Pageable",
+        "org.springframework.stereotype.Controller",
+        "org.springframework.ui.Model",
+        "org.springframework.validation.BindingResult",
+        "org.springframework.web.bind.WebDataBinder",
+        "org.springframework.web.bind.annotation.GetMapping",
+        "org.springframework.web.bind.annotation.InitBinder",
+        "org.springframework.web.bind.annotation.ModelAttribute",
+        "org.springframework.web.bind.annotation.PathVariable",
+        "org.springframework.web.bind.annotation.PostMapping",
+        "org.springframework.web.bind.annotation.RequestParam",
+        "org.springframework.web.servlet.ModelAndView",
+        "jakarta.validation.Valid",
+        "org.springframework.web.servlet.mvc.support.RedirectAttributes"
+      ],
+      "classes": [
+        {
+          "name": "OwnerController",
+          "layer": "controller",
+          "annotations": [
+            "Controller"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "VIEWS_OWNER_CREATE_OR_UPDATE_FORM",
+              "type": "String",
+              "annotations": []
+            },
+            {
+              "name": "owners",
+              "type": "OwnerRepository",
+              "annotations": []
+            }
+          ],
+          "methods": [
+            {
+              "name": "setAllowedFields",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "dataBinder",
+                  "type": "WebDataBinder"
+                }
+              ],
+              "annotations": [
+                "InitBinder"
+              ]
+            },
+            {
+              "name": "findOwner",
+              "return_type": "Owner",
+              "parameters": [
+                {
+                  "name": "ownerId",
+                  "type": "Integer"
+                }
+              ],
+              "annotations": [
+                "ModelAttribute"
+              ]
+            },
+            {
+              "name": "initCreationForm",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": [
+                "GetMapping"
+              ],
+              "http_method": "GET",
+              "path": "/owners/new"
+            },
+            {
+              "name": "processCreationForm",
+              "return_type": "String",
+              "parameters": [
+                {
+                  "name": "owner",
+                  "type": "Owner"
+                },
+                {
+                  "name": "result",
+                  "type": "BindingResult"
+                },
+                {
+                  "name": "redirectAttributes",
+                  "type": "RedirectAttributes"
+                }
+              ],
+              "annotations": [
+                "PostMapping"
+              ],
+              "http_method": "POST",
+              "path": "/owners/new"
+            },
+            {
+              "name": "initFindForm",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": [
+                "GetMapping"
+              ],
+              "http_method": "GET",
+              "path": "/owners/find"
+            },
+            {
+              "name": "processFindForm",
+              "return_type": "String",
+              "parameters": [
+                {
+                  "name": "page",
+                  "type": "int"
+                },
+                {
+                  "name": "owner",
+                  "type": "Owner"
+                },
+                {
+                  "name": "result",
+                  "type": "BindingResult"
+                },
+                {
+                  "name": "model",
+                  "type": "Model"
+                }
+              ],
+              "annotations": [
+                "GetMapping"
+              ],
+              "http_method": "GET",
+              "path": "/owners"
+            },
+            {
+              "name": "addPaginationModel",
+              "return_type": "String",
+              "parameters": [
+                {
+                  "name": "page",
+                  "type": "int"
+                },
+                {
+                  "name": "model",
+                  "type": "Model"
+                },
+                {
+                  "name": "paginated",
+                  "type": "Page<Owner>"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "findPaginatedForOwnersLastName",
+              "return_type": "Page<Owner>",
+              "parameters": [
+                {
+                  "name": "page",
+                  "type": "int"
+                },
+                {
+                  "name": "lastname",
+                  "type": "String"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "initUpdateOwnerForm",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": [
+                "GetMapping"
+              ],
+              "http_method": "GET",
+              "path": "/owners/{ownerId}/edit"
+            },
+            {
+              "name": "processUpdateOwnerForm",
+              "return_type": "String",
+              "parameters": [
+                {
+                  "name": "owner",
+                  "type": "Owner"
+                },
+                {
+                  "name": "result",
+                  "type": "BindingResult"
+                },
+                {
+                  "name": "ownerId",
+                  "type": "int"
+                },
+                {
+                  "name": "redirectAttributes",
+                  "type": "RedirectAttributes"
+                }
+              ],
+              "annotations": [
+                "PostMapping"
+              ],
+              "http_method": "POST",
+              "path": "/owners/{ownerId}/edit"
+            },
+            {
+              "name": "showOwner",
+              "return_type": "ModelAndView",
+              "parameters": [
+                {
+                  "name": "ownerId",
+                  "type": "int"
+                }
+              ],
+              "annotations": [
+                "GetMapping"
+              ],
+              "http_method": "GET",
+              "path": "/owners/{ownerId}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/PetTypeRepository.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "java.util.List",
+        "org.springframework.data.jpa.repository.JpaRepository",
+        "org.springframework.data.jpa.repository.Query"
+      ],
+      "classes": [
+        {
+          "name": "PetTypeRepository",
+          "layer": "repository",
+          "annotations": [],
+          "extends": [
+            "JpaRepository"
+          ],
+          "methods": [
+            {
+              "name": "findPetTypes",
+              "return_type": "List<PetType>",
+              "parameters": [],
+              "annotations": [
+                "Query"
+              ],
+              "query": "SELECT ptype FROM PetType ptype ORDER BY ptype.name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "java.time.LocalDate",
+        "java.util.Collection",
+        "java.util.Objects",
+        "java.util.Optional",
+        "org.springframework.stereotype.Controller",
+        "org.springframework.ui.ModelMap",
+        "org.springframework.util.Assert",
+        "org.springframework.util.StringUtils",
+        "org.springframework.validation.BindingResult",
+        "org.springframework.web.bind.WebDataBinder",
+        "org.springframework.web.bind.annotation.GetMapping",
+        "org.springframework.web.bind.annotation.InitBinder",
+        "org.springframework.web.bind.annotation.ModelAttribute",
+        "org.springframework.web.bind.annotation.PathVariable",
+        "org.springframework.web.bind.annotation.PostMapping",
+        "org.springframework.web.bind.annotation.RequestMapping",
+        "jakarta.validation.Valid",
+        "org.springframework.web.servlet.mvc.support.RedirectAttributes"
+      ],
+      "classes": [
+        {
+          "name": "PetController",
+          "layer": "controller",
+          "annotations": [
+            "RequestMapping",
+            "Controller"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "VIEWS_PETS_CREATE_OR_UPDATE_FORM",
+              "type": "String",
+              "annotations": []
+            },
+            {
+              "name": "owners",
+              "type": "OwnerRepository",
+              "annotations": []
+            },
+            {
+              "name": "types",
+              "type": "PetTypeRepository",
+              "annotations": []
+            }
+          ],
+          "methods": [
+            {
+              "name": "populatePetTypes",
+              "return_type": "Collection<PetType>",
+              "parameters": [],
+              "annotations": [
+                "ModelAttribute"
+              ]
+            },
+            {
+              "name": "findOwner",
+              "return_type": "Owner",
+              "parameters": [
+                {
+                  "name": "ownerId",
+                  "type": "int"
+                }
+              ],
+              "annotations": [
+                "ModelAttribute"
+              ]
+            },
+            {
+              "name": "findPet",
+              "return_type": "Pet",
+              "parameters": [
+                {
+                  "name": "ownerId",
+                  "type": "int"
+                },
+                {
+                  "name": "petId",
+                  "type": "Integer"
+                }
+              ],
+              "annotations": [
+                "ModelAttribute"
+              ]
+            },
+            {
+              "name": "initOwnerBinder",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "dataBinder",
+                  "type": "WebDataBinder"
+                }
+              ],
+              "annotations": [
+                "InitBinder"
+              ]
+            },
+            {
+              "name": "initPetBinder",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "dataBinder",
+                  "type": "WebDataBinder"
+                }
+              ],
+              "annotations": [
+                "InitBinder"
+              ]
+            },
+            {
+              "name": "initCreationForm",
+              "return_type": "String",
+              "parameters": [
+                {
+                  "name": "owner",
+                  "type": "Owner"
+                },
+                {
+                  "name": "model",
+                  "type": "ModelMap"
+                }
+              ],
+              "annotations": [
+                "GetMapping"
+              ],
+              "http_method": "GET",
+              "path": "/pets/new"
+            },
+            {
+              "name": "processCreationForm",
+              "return_type": "String",
+              "parameters": [
+                {
+                  "name": "owner",
+                  "type": "Owner"
+                },
+                {
+                  "name": "pet",
+                  "type": "Pet"
+                },
+                {
+                  "name": "result",
+                  "type": "BindingResult"
+                },
+                {
+                  "name": "redirectAttributes",
+                  "type": "RedirectAttributes"
+                }
+              ],
+              "annotations": [
+                "PostMapping"
+              ],
+              "http_method": "POST",
+              "path": "/pets/new"
+            },
+            {
+              "name": "initUpdateForm",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": [
+                "GetMapping"
+              ],
+              "http_method": "GET",
+              "path": "/pets/{petId}/edit"
+            },
+            {
+              "name": "processUpdateForm",
+              "return_type": "String",
+              "parameters": [
+                {
+                  "name": "owner",
+                  "type": "Owner"
+                },
+                {
+                  "name": "pet",
+                  "type": "Pet"
+                },
+                {
+                  "name": "result",
+                  "type": "BindingResult"
+                },
+                {
+                  "name": "redirectAttributes",
+                  "type": "RedirectAttributes"
+                }
+              ],
+              "annotations": [
+                "PostMapping"
+              ],
+              "http_method": "POST",
+              "path": "/pets/{petId}/edit"
+            },
+            {
+              "name": "updatePetDetails",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "owner",
+                  "type": "Owner"
+                },
+                {
+                  "name": "pet",
+                  "type": "Pet"
+                }
+              ],
+              "annotations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/PetValidator.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "org.springframework.util.StringUtils",
+        "org.springframework.validation.Errors",
+        "org.springframework.validation.Validator"
+      ],
+      "classes": [
+        {
+          "name": "PetValidator",
+          "layer": "other",
+          "annotations": [],
+          "extends": null,
+          "fields": [
+            {
+              "name": "REQUIRED",
+              "type": "String",
+              "annotations": []
+            }
+          ],
+          "methods": [
+            {
+              "name": "validate",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "obj",
+                  "type": "Object"
+                },
+                {
+                  "name": "errors",
+                  "type": "Errors"
+                }
+              ],
+              "annotations": [
+                "Override"
+              ]
+            },
+            {
+              "name": "supports",
+              "return_type": "boolean",
+              "parameters": [
+                {
+                  "name": "clazz",
+                  "type": "Class<void>"
+                }
+              ],
+              "annotations": [
+                "Override"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "java.util.ArrayList",
+        "java.util.List",
+        "java.util.Objects",
+        "org.springframework.core.style.ToStringCreator",
+        "org.springframework.samples.petclinic.model.Person",
+        "org.springframework.util.Assert",
+        "jakarta.persistence.CascadeType",
+        "jakarta.persistence.Column",
+        "jakarta.persistence.Entity",
+        "jakarta.persistence.FetchType",
+        "jakarta.persistence.JoinColumn",
+        "jakarta.persistence.OneToMany",
+        "jakarta.persistence.OrderBy",
+        "jakarta.persistence.Table",
+        "jakarta.validation.constraints.Pattern",
+        "jakarta.validation.constraints.NotBlank"
+      ],
+      "classes": [
+        {
+          "name": "Owner",
+          "layer": "entity",
+          "annotations": [
+            "Entity",
+            "Table"
+          ],
+          "extends": "Person",
+          "fields": [
+            {
+              "name": "address",
+              "type": "String",
+              "annotations": [
+                "Column",
+                "NotBlank"
+              ]
+            },
+            {
+              "name": "city",
+              "type": "String",
+              "annotations": [
+                "Column",
+                "NotBlank"
+              ]
+            },
+            {
+              "name": "telephone",
+              "type": "String",
+              "annotations": [
+                "Column",
+                "NotBlank",
+                "Pattern"
+              ]
+            },
+            {
+              "name": "pets",
+              "type": "List<Pet>",
+              "annotations": [
+                "OneToMany",
+                "JoinColumn",
+                "OrderBy"
+              ],
+              "relationship": "OneToMany",
+              "join_column": "owner_id"
+            }
+          ],
+          "methods": [
+            {
+              "name": "getAddress",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "setAddress",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "address",
+                  "type": "String"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "getCity",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "setCity",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "city",
+                  "type": "String"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "getTelephone",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "setTelephone",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "telephone",
+                  "type": "String"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "getPets",
+              "return_type": "List<Pet>",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "addPet",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "pet",
+                  "type": "Pet"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "getPet",
+              "return_type": "Pet",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "String"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "getPet",
+              "return_type": "Pet",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "Integer"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "getPet",
+              "return_type": "Pet",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "String"
+                },
+                {
+                  "name": "ignoreNew",
+                  "type": "boolean"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "toString",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": [
+                "Override"
+              ]
+            },
+            {
+              "name": "addVisit",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "petId",
+                  "type": "Integer"
+                },
+                {
+                  "name": "visit",
+                  "type": "Visit"
+                }
+              ],
+              "annotations": []
+            }
+          ],
+          "table_name": "owners"
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/Visit.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "java.time.LocalDate",
+        "org.springframework.format.annotation.DateTimeFormat",
+        "org.springframework.samples.petclinic.model.BaseEntity",
+        "jakarta.persistence.Column",
+        "jakarta.persistence.Entity",
+        "jakarta.persistence.Table",
+        "jakarta.validation.constraints.NotBlank"
+      ],
+      "classes": [
+        {
+          "name": "Visit",
+          "layer": "entity",
+          "annotations": [
+            "Entity",
+            "Table"
+          ],
+          "extends": "BaseEntity",
+          "fields": [
+            {
+              "name": "date",
+              "type": "LocalDate",
+              "annotations": [
+                "Column",
+                "DateTimeFormat"
+              ],
+              "column_name": "visit_date"
+            },
+            {
+              "name": "description",
+              "type": "String",
+              "annotations": [
+                "NotBlank"
+              ]
+            }
+          ],
+          "methods": [
+            {
+              "name": "getDate",
+              "return_type": "LocalDate",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "setDate",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "date",
+                  "type": "LocalDate"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "getDescription",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "setDescription",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "description",
+                  "type": "String"
+                }
+              ],
+              "annotations": []
+            }
+          ],
+          "table_name": "visits"
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/PetType.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "org.springframework.samples.petclinic.model.NamedEntity",
+        "jakarta.persistence.Entity",
+        "jakarta.persistence.Table"
+      ],
+      "classes": [
+        {
+          "name": "PetType",
+          "layer": "entity",
+          "annotations": [
+            "Entity",
+            "Table"
+          ],
+          "extends": "NamedEntity",
+          "fields": [],
+          "methods": [],
+          "table_name": "types"
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/owner/package-info.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [],
+      "classes": []
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/system/WelcomeController.java",
+      "package": "org.springframework.samples.petclinic.system",
+      "imports": [
+        "org.springframework.stereotype.Controller",
+        "org.springframework.web.bind.annotation.GetMapping"
+      ],
+      "classes": [
+        {
+          "name": "WelcomeController",
+          "layer": "controller",
+          "annotations": [
+            "Controller"
+          ],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "welcome",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": [
+                "GetMapping"
+              ],
+              "http_method": "GET",
+              "path": "/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/system/CacheConfiguration.java",
+      "package": "org.springframework.samples.petclinic.system",
+      "imports": [
+        "org.springframework.boot.cache.autoconfigure.JCacheManagerCustomizer",
+        "org.springframework.cache.annotation.EnableCaching",
+        "org.springframework.context.annotation.Bean",
+        "org.springframework.context.annotation.Configuration",
+        "javax.cache.configuration.MutableConfiguration"
+      ],
+      "classes": [
+        {
+          "name": "CacheConfiguration",
+          "layer": "other",
+          "annotations": [
+            "Configuration",
+            "EnableCaching"
+          ],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "petclinicCacheConfigurationCustomizer",
+              "return_type": "JCacheManagerCustomizer",
+              "parameters": [],
+              "annotations": [
+                "Bean"
+              ]
+            },
+            {
+              "name": "cacheConfiguration",
+              "return_type": "javax",
+              "parameters": [],
+              "annotations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/system/CrashController.java",
+      "package": "org.springframework.samples.petclinic.system",
+      "imports": [
+        "org.springframework.stereotype.Controller",
+        "org.springframework.web.bind.annotation.GetMapping"
+      ],
+      "classes": [
+        {
+          "name": "CrashController",
+          "layer": "controller",
+          "annotations": [
+            "Controller"
+          ],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "triggerException",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": [
+                "GetMapping"
+              ],
+              "http_method": "GET",
+              "path": "/oups"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/system/WebConfiguration.java",
+      "package": "org.springframework.samples.petclinic.system",
+      "imports": [
+        "org.springframework.context.annotation.Bean",
+        "org.springframework.context.annotation.Configuration",
+        "org.springframework.web.servlet.LocaleResolver",
+        "org.springframework.web.servlet.config.annotation.InterceptorRegistry",
+        "org.springframework.web.servlet.config.annotation.WebMvcConfigurer",
+        "org.springframework.web.servlet.i18n.LocaleChangeInterceptor",
+        "org.springframework.web.servlet.i18n.SessionLocaleResolver",
+        "java.util.Locale"
+      ],
+      "classes": [
+        {
+          "name": "WebConfiguration",
+          "layer": "other",
+          "annotations": [
+            "Configuration",
+            "SuppressWarnings"
+          ],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "localeResolver",
+              "return_type": "LocaleResolver",
+              "parameters": [],
+              "annotations": [
+                "Bean"
+              ]
+            },
+            {
+              "name": "localeChangeInterceptor",
+              "return_type": "LocaleChangeInterceptor",
+              "parameters": [],
+              "annotations": [
+                "Bean"
+              ]
+            },
+            {
+              "name": "addInterceptors",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "registry",
+                  "type": "InterceptorRegistry"
+                }
+              ],
+              "annotations": [
+                "Override"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/system/package-info.java",
+      "package": "org.springframework.samples.petclinic.system",
+      "imports": [],
+      "classes": []
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "package": "org.springframework.samples.petclinic.model",
+      "imports": [
+        "java.io.Serializable",
+        "jakarta.persistence.GeneratedValue",
+        "jakarta.persistence.GenerationType",
+        "jakarta.persistence.Id",
+        "jakarta.persistence.MappedSuperclass"
+      ],
+      "classes": [
+        {
+          "name": "BaseEntity",
+          "layer": "other",
+          "annotations": [
+            "MappedSuperclass"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "id",
+              "type": "Integer",
+              "annotations": [
+                "Id",
+                "GeneratedValue"
+              ]
+            }
+          ],
+          "methods": [
+            {
+              "name": "getId",
+              "return_type": "Integer",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "setId",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "Integer"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "isNew",
+              "return_type": "boolean",
+              "parameters": [],
+              "annotations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/model/Person.java",
+      "package": "org.springframework.samples.petclinic.model",
+      "imports": [
+        "jakarta.persistence.Column",
+        "jakarta.persistence.MappedSuperclass",
+        "jakarta.validation.constraints.NotBlank"
+      ],
+      "classes": [
+        {
+          "name": "Person",
+          "layer": "other",
+          "annotations": [
+            "MappedSuperclass"
+          ],
+          "extends": "BaseEntity",
+          "fields": [
+            {
+              "name": "firstName",
+              "type": "String",
+              "annotations": [
+                "Column",
+                "NotBlank"
+              ]
+            },
+            {
+              "name": "lastName",
+              "type": "String",
+              "annotations": [
+                "Column",
+                "NotBlank"
+              ]
+            }
+          ],
+          "methods": [
+            {
+              "name": "getFirstName",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "setFirstName",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "firstName",
+                  "type": "String"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "getLastName",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "setLastName",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "lastName",
+                  "type": "String"
+                }
+              ],
+              "annotations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/model/package-info.java",
+      "package": "org.springframework.samples.petclinic.model",
+      "imports": [],
+      "classes": []
+    },
+    {
+      "file": "repo/spring-petclinic/src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "package": "org.springframework.samples.petclinic.model",
+      "imports": [
+        "jakarta.persistence.Column",
+        "jakarta.persistence.MappedSuperclass",
+        "jakarta.validation.constraints.NotBlank"
+      ],
+      "classes": [
+        {
+          "name": "NamedEntity",
+          "layer": "other",
+          "annotations": [
+            "MappedSuperclass"
+          ],
+          "extends": "BaseEntity",
+          "fields": [
+            {
+              "name": "name",
+              "type": "String",
+              "annotations": [
+                "Column",
+                "NotBlank"
+              ]
+            }
+          ],
+          "methods": [
+            {
+              "name": "getName",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "setName",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "String"
+                }
+              ],
+              "annotations": []
+            },
+            {
+              "name": "toString",
+              "return_type": "String",
+              "parameters": [],
+              "annotations": [
+                "Override"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/PetClinicIntegrationTests.java",
+      "package": "org.springframework.samples.petclinic",
+      "imports": [
+        "org.assertj.core.api.Assertions.assertThat",
+        "org.junit.jupiter.api.Test",
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.boot.SpringApplication",
+        "org.springframework.boot.restclient.RestTemplateBuilder",
+        "org.springframework.boot.test.context.SpringBootTest",
+        "org.springframework.boot.test.context.SpringBootTest.WebEnvironment",
+        "org.springframework.boot.test.web.server.LocalServerPort",
+        "org.springframework.http.HttpStatus",
+        "org.springframework.http.RequestEntity",
+        "org.springframework.http.ResponseEntity",
+        "org.springframework.samples.petclinic.vet.VetRepository",
+        "org.springframework.web.client.RestTemplate"
+      ],
+      "classes": [
+        {
+          "name": "PetClinicIntegrationTests",
+          "layer": "other",
+          "annotations": [
+            "SpringBootTest"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "port",
+              "type": "int",
+              "annotations": [
+                "LocalServerPort"
+              ]
+            },
+            {
+              "name": "vets",
+              "type": "VetRepository",
+              "annotations": [
+                "Autowired"
+              ]
+            },
+            {
+              "name": "builder",
+              "type": "RestTemplateBuilder",
+              "annotations": [
+                "Autowired"
+              ]
+            }
+          ],
+          "methods": [
+            {
+              "name": "findAll",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "ownerDetails",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "ownerList",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "main",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": "String"
+                }
+              ],
+              "annotations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+      "package": "org.springframework.samples.petclinic",
+      "imports": [
+        "org.assertj.core.api.Assertions.assertThat",
+        "org.junit.jupiter.api.Test",
+        "org.junit.jupiter.api.condition.DisabledInNativeImage",
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.boot.restclient.RestTemplateBuilder",
+        "org.springframework.boot.test.context.SpringBootTest",
+        "org.springframework.boot.test.context.SpringBootTest.WebEnvironment",
+        "org.springframework.boot.test.web.server.LocalServerPort",
+        "org.springframework.boot.testcontainers.service.connection.ServiceConnection",
+        "org.springframework.http.HttpStatus",
+        "org.springframework.http.RequestEntity",
+        "org.springframework.http.ResponseEntity",
+        "org.springframework.samples.petclinic.vet.VetRepository",
+        "org.springframework.test.context.ActiveProfiles",
+        "org.springframework.test.context.aot.DisabledInAotMode",
+        "org.springframework.web.client.RestTemplate",
+        "org.testcontainers.junit.jupiter.Container",
+        "org.testcontainers.junit.jupiter.Testcontainers",
+        "org.testcontainers.mysql.MySQLContainer",
+        "org.testcontainers.utility.DockerImageName"
+      ],
+      "classes": [
+        {
+          "name": "MySqlIntegrationTests",
+          "layer": "other",
+          "annotations": [
+            "DisabledInAotMode",
+            "SpringBootTest",
+            "ActiveProfiles",
+            "DisabledInNativeImage",
+            "Testcontainers"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "container",
+              "type": "MySQLContainer",
+              "annotations": [
+                "ServiceConnection",
+                "Container"
+              ]
+            },
+            {
+              "name": "port",
+              "type": "int",
+              "annotations": [
+                "LocalServerPort"
+              ]
+            },
+            {
+              "name": "vets",
+              "type": "VetRepository",
+              "annotations": [
+                "Autowired"
+              ]
+            },
+            {
+              "name": "builder",
+              "type": "RestTemplateBuilder",
+              "annotations": [
+                "Autowired"
+              ]
+            }
+          ],
+          "methods": [
+            {
+              "name": "findAll",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "ownerDetails",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/MysqlTestApplication.java",
+      "package": "org.springframework.samples.petclinic",
+      "imports": [
+        "org.springframework.boot.SpringApplication",
+        "org.springframework.boot.testcontainers.service.connection.ServiceConnection",
+        "org.springframework.context.annotation.Bean",
+        "org.springframework.context.annotation.Configuration",
+        "org.springframework.context.annotation.Profile",
+        "org.testcontainers.mysql.MySQLContainer",
+        "org.testcontainers.utility.DockerImageName"
+      ],
+      "classes": [
+        {
+          "name": "MysqlTestApplication",
+          "layer": "other",
+          "annotations": [
+            "Configuration"
+          ],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "container",
+              "return_type": "MySQLContainer",
+              "parameters": [],
+              "annotations": [
+                "Bean",
+                "Profile",
+                "ServiceConnection"
+              ]
+            },
+            {
+              "name": "main",
+              "return_type": "void",
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": "String"
+                }
+              ],
+              "annotations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTests.java",
+      "package": "org.springframework.samples.petclinic.vet",
+      "imports": [
+        "org.junit.jupiter.api.Test",
+        "org.springframework.util.SerializationUtils",
+        "org.assertj.core.api.Assertions.assertThat"
+      ],
+      "classes": [
+        {
+          "name": "VetTests",
+          "layer": "other",
+          "annotations": [],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "serialization",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+      "package": "org.springframework.samples.petclinic.vet",
+      "imports": [
+        "org.assertj.core.util.Lists",
+        "org.junit.jupiter.api.BeforeEach",
+        "org.junit.jupiter.api.Test",
+        "org.junit.jupiter.api.condition.DisabledInNativeImage",
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest",
+        "org.springframework.data.domain.PageImpl",
+        "org.springframework.data.domain.Pageable",
+        "org.springframework.http.MediaType",
+        "org.springframework.test.context.aot.DisabledInAotMode",
+        "org.springframework.test.context.bean.override.mockito.MockitoBean",
+        "org.springframework.test.web.servlet.MockMvc",
+        "org.springframework.test.web.servlet.ResultActions",
+        "org.springframework.test.web.servlet.request.MockMvcRequestBuilders",
+        "org.mockito.ArgumentMatchers.any",
+        "org.mockito.BDDMockito.given",
+        "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get",
+        "org.springframework.test.web.servlet.result.MockMvcResultMatchers"
+      ],
+      "classes": [
+        {
+          "name": "VetControllerTests",
+          "layer": "other",
+          "annotations": [
+            "DisabledInNativeImage",
+            "WebMvcTest",
+            "DisabledInAotMode"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "mockMvc",
+              "type": "MockMvc",
+              "annotations": [
+                "Autowired"
+              ]
+            },
+            {
+              "name": "vets",
+              "type": "VetRepository",
+              "annotations": [
+                "MockitoBean"
+              ]
+            }
+          ],
+          "methods": [
+            {
+              "name": "james",
+              "return_type": "Vet",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "helen",
+              "return_type": "Vet",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "setup",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "BeforeEach"
+              ]
+            },
+            {
+              "name": "showVetListHtml",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "showResourcesVetList",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "org.junit.jupiter.api.BeforeEach",
+        "org.junit.jupiter.api.Nested",
+        "org.junit.jupiter.api.Test",
+        "org.junit.jupiter.api.condition.DisabledInNativeImage",
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest",
+        "org.springframework.context.annotation.ComponentScan",
+        "org.springframework.context.annotation.FilterType",
+        "org.springframework.test.context.aot.DisabledInAotMode",
+        "org.springframework.test.context.bean.override.mockito.MockitoBean",
+        "org.springframework.test.web.servlet.MockMvc",
+        "java.time.LocalDate",
+        "java.util.List",
+        "java.util.Optional",
+        "org.mockito.BDDMockito.given",
+        "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get",
+        "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post",
+        "org.springframework.test.web.servlet.result.MockMvcResultMatchers.model",
+        "org.springframework.test.web.servlet.result.MockMvcResultMatchers.status",
+        "org.springframework.test.web.servlet.result.MockMvcResultMatchers.view"
+      ],
+      "classes": [
+        {
+          "name": "PetControllerTests",
+          "layer": "other",
+          "annotations": [
+            "DisabledInNativeImage",
+            "WebMvcTest",
+            "DisabledInAotMode"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "TEST_OWNER_ID",
+              "type": "int",
+              "annotations": []
+            },
+            {
+              "name": "TEST_PET_ID",
+              "type": "int",
+              "annotations": []
+            },
+            {
+              "name": "mockMvc",
+              "type": "MockMvc",
+              "annotations": [
+                "Autowired"
+              ]
+            },
+            {
+              "name": "owners",
+              "type": "OwnerRepository",
+              "annotations": [
+                "MockitoBean"
+              ]
+            },
+            {
+              "name": "types",
+              "type": "PetTypeRepository",
+              "annotations": [
+                "MockitoBean"
+              ]
+            }
+          ],
+          "methods": [
+            {
+              "name": "setup",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "BeforeEach"
+              ]
+            },
+            {
+              "name": "initCreationForm",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processCreationFormSuccess",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processCreationFormWithBlankName",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processCreationFormWithDuplicateName",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processCreationFormWithMissingPetType",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processCreationFormWithInvalidBirthDate",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "initUpdateForm",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processUpdateFormSuccess",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processUpdateFormWithInvalidBirthDate",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processUpdateFormWithBlankName",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "ProcessCreationFormHasErrors",
+          "layer": "other",
+          "annotations": [
+            "Nested"
+          ],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "processCreationFormWithBlankName",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processCreationFormWithDuplicateName",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processCreationFormWithMissingPetType",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processCreationFormWithInvalidBirthDate",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "initUpdateForm",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "ProcessUpdateFormHasErrors",
+          "layer": "other",
+          "annotations": [
+            "Nested"
+          ],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "processUpdateFormWithInvalidBirthDate",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processUpdateFormWithBlankName",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "org.junit.jupiter.api.BeforeEach",
+        "org.junit.jupiter.api.Test",
+        "org.junit.jupiter.api.condition.DisabledInNativeImage",
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest",
+        "org.springframework.data.domain.Page",
+        "org.springframework.data.domain.PageImpl",
+        "org.springframework.data.domain.Pageable",
+        "org.springframework.test.context.aot.DisabledInAotMode",
+        "org.springframework.test.context.bean.override.mockito.MockitoBean",
+        "org.springframework.test.web.servlet.MockMvc",
+        "org.springframework.test.web.servlet.request.MockMvcRequestBuilders",
+        "java.time.LocalDate",
+        "java.util.List",
+        "java.util.Optional",
+        "org.hamcrest.Matchers.empty",
+        "org.hamcrest.Matchers.greaterThan",
+        "org.hamcrest.Matchers.hasItem",
+        "org.hamcrest.Matchers.hasProperty",
+        "org.hamcrest.Matchers.hasSize",
+        "org.hamcrest.Matchers.is",
+        "org.hamcrest.Matchers.not",
+        "org.mockito.ArgumentMatchers.any",
+        "org.mockito.ArgumentMatchers.anyString",
+        "org.mockito.ArgumentMatchers.eq",
+        "org.mockito.BDDMockito.given",
+        "org.mockito.Mockito.when",
+        "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get",
+        "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post",
+        "org.springframework.test.web.servlet.result.MockMvcResultMatchers"
+      ],
+      "classes": [
+        {
+          "name": "OwnerControllerTests",
+          "layer": "other",
+          "annotations": [
+            "DisabledInNativeImage",
+            "WebMvcTest",
+            "DisabledInAotMode"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "TEST_OWNER_ID",
+              "type": "int",
+              "annotations": []
+            },
+            {
+              "name": "mockMvc",
+              "type": "MockMvc",
+              "annotations": [
+                "Autowired"
+              ]
+            },
+            {
+              "name": "owners",
+              "type": "OwnerRepository",
+              "annotations": [
+                "MockitoBean"
+              ]
+            }
+          ],
+          "methods": [
+            {
+              "name": "george",
+              "return_type": "Owner",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "setup",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "BeforeEach"
+              ]
+            },
+            {
+              "name": "initCreationForm",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processCreationFormSuccess",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processCreationFormHasErrors",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "initFindForm",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processFindFormSuccess",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processFindFormByLastName",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processFindFormNoOwnersFound",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "initUpdateOwnerForm",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processUpdateOwnerFormSuccess",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processUpdateOwnerFormUnchangedSuccess",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processUpdateOwnerFormHasErrors",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "showOwner",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processUpdateOwnerFormWithIdMismatch",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "org.mockito.BDDMockito.given",
+        "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get",
+        "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post",
+        "org.springframework.test.web.servlet.result.MockMvcResultMatchers.model",
+        "org.springframework.test.web.servlet.result.MockMvcResultMatchers.status",
+        "org.springframework.test.web.servlet.result.MockMvcResultMatchers.view",
+        "org.junit.jupiter.api.BeforeEach",
+        "org.junit.jupiter.api.Test",
+        "org.junit.jupiter.api.condition.DisabledInNativeImage",
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest",
+        "org.springframework.test.context.aot.DisabledInAotMode",
+        "org.springframework.test.context.bean.override.mockito.MockitoBean",
+        "org.springframework.test.web.servlet.MockMvc",
+        "java.util.Optional"
+      ],
+      "classes": [
+        {
+          "name": "VisitControllerTests",
+          "layer": "other",
+          "annotations": [
+            "DisabledInNativeImage",
+            "WebMvcTest",
+            "DisabledInAotMode"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "TEST_OWNER_ID",
+              "type": "int",
+              "annotations": []
+            },
+            {
+              "name": "TEST_PET_ID",
+              "type": "int",
+              "annotations": []
+            },
+            {
+              "name": "mockMvc",
+              "type": "MockMvc",
+              "annotations": [
+                "Autowired"
+              ]
+            },
+            {
+              "name": "owners",
+              "type": "OwnerRepository",
+              "annotations": [
+                "MockitoBean"
+              ]
+            }
+          ],
+          "methods": [
+            {
+              "name": "init",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "BeforeEach"
+              ]
+            },
+            {
+              "name": "initNewVisitForm",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processNewVisitFormSuccess",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "processNewVisitFormHasErrors",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "org.junit.jupiter.api.BeforeEach",
+        "org.junit.jupiter.api.Nested",
+        "org.junit.jupiter.api.Test",
+        "org.junit.jupiter.api.condition.DisabledInNativeImage",
+        "org.junit.jupiter.api.extension.ExtendWith",
+        "org.mockito.junit.jupiter.MockitoExtension",
+        "org.springframework.validation.Errors",
+        "org.springframework.validation.MapBindingResult",
+        "java.time.LocalDate",
+        "java.util.HashMap",
+        "org.junit.jupiter.api.Assertions.assertFalse",
+        "org.junit.jupiter.api.Assertions.assertTrue"
+      ],
+      "classes": [
+        {
+          "name": "PetValidatorTests",
+          "layer": "other",
+          "annotations": [
+            "DisabledInNativeImage",
+            "ExtendWith"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "petValidator",
+              "type": "PetValidator",
+              "annotations": []
+            },
+            {
+              "name": "pet",
+              "type": "Pet",
+              "annotations": []
+            },
+            {
+              "name": "petType",
+              "type": "PetType",
+              "annotations": []
+            },
+            {
+              "name": "errors",
+              "type": "Errors",
+              "annotations": []
+            },
+            {
+              "name": "petName",
+              "type": "String",
+              "annotations": []
+            },
+            {
+              "name": "petTypeName",
+              "type": "String",
+              "annotations": []
+            },
+            {
+              "name": "petBirthDate",
+              "type": "LocalDate",
+              "annotations": []
+            }
+          ],
+          "methods": [
+            {
+              "name": "setUp",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "BeforeEach"
+              ]
+            },
+            {
+              "name": "validate",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "validateWithInvalidPetName",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "validateWithInvalidPetType",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "validateWithInvalidBirthDate",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "ValidateHasErrors",
+          "layer": "other",
+          "annotations": [
+            "Nested"
+          ],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "validateWithInvalidPetName",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "validateWithInvalidPetType",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "validateWithInvalidBirthDate",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+      "package": "org.springframework.samples.petclinic.owner",
+      "imports": [
+        "org.assertj.core.api.Assertions.assertThat",
+        "org.mockito.BDDMockito.given",
+        "java.text.ParseException",
+        "java.util.ArrayList",
+        "java.util.Collection",
+        "java.util.List",
+        "java.util.Locale",
+        "org.junit.jupiter.api.Assertions",
+        "org.junit.jupiter.api.BeforeEach",
+        "org.junit.jupiter.api.Test",
+        "org.junit.jupiter.api.condition.DisabledInNativeImage",
+        "org.junit.jupiter.api.extension.ExtendWith",
+        "org.mockito.Mock",
+        "org.mockito.junit.jupiter.MockitoExtension"
+      ],
+      "classes": [
+        {
+          "name": "PetTypeFormatterTests",
+          "layer": "other",
+          "annotations": [
+            "DisabledInNativeImage",
+            "ExtendWith"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "types",
+              "type": "PetTypeRepository",
+              "annotations": [
+                "Mock"
+              ]
+            },
+            {
+              "name": "petTypeFormatter",
+              "type": "PetTypeFormatter",
+              "annotations": []
+            }
+          ],
+          "methods": [
+            {
+              "name": "setup",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "BeforeEach"
+              ]
+            },
+            {
+              "name": "testPrint",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "shouldParse",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "shouldThrowParseException",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "makePetTypes",
+              "return_type": "List<PetType>",
+              "parameters": [],
+              "annotations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/system/CrashControllerTests.java",
+      "package": "org.springframework.samples.petclinic.system",
+      "imports": [
+        "org.junit.jupiter.api.Test",
+        "org.assertj.core.api.Assertions.assertThatExceptionOfType"
+      ],
+      "classes": [
+        {
+          "name": "CrashControllerTests",
+          "layer": "other",
+          "annotations": [],
+          "extends": null,
+          "fields": [
+            {
+              "name": "testee",
+              "type": "CrashController",
+              "annotations": []
+            }
+          ],
+          "methods": [
+            {
+              "name": "triggerException",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java",
+      "package": "org.springframework.samples.petclinic.system",
+      "imports": [
+        "org.junit.jupiter.api.Test",
+        "java.nio.file.Files",
+        "java.nio.file.Path",
+        "java.util.HashMap",
+        "java.util.List",
+        "java.util.Map",
+        "java.util.Properties",
+        "java.util.Set",
+        "java.util.TreeSet",
+        "java.util.regex.Pattern",
+        "java.util.stream.Stream",
+        "org.junit.jupiter.api.Assertions.fail"
+      ],
+      "classes": [
+        {
+          "name": "I18nPropertiesSyncTest",
+          "layer": "other",
+          "annotations": [],
+          "extends": null,
+          "fields": [
+            {
+              "name": "I18N_DIR",
+              "type": "String",
+              "annotations": []
+            },
+            {
+              "name": "BASE_NAME",
+              "type": "String",
+              "annotations": []
+            },
+            {
+              "name": "PROPERTIES",
+              "type": "String",
+              "annotations": []
+            },
+            {
+              "name": "HTML_TEXT_LITERAL",
+              "type": "Pattern",
+              "annotations": []
+            },
+            {
+              "name": "BRACKET_ONLY",
+              "type": "Pattern",
+              "annotations": []
+            },
+            {
+              "name": "HAS_TH_TEXT_ATTRIBUTE",
+              "type": "Pattern",
+              "annotations": []
+            }
+          ],
+          "methods": [
+            {
+              "name": "checkNonInternationalizedStrings",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "checkI18nPropertyFilesAreInSync",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/system/CrashControllerIntegrationTests.java",
+      "package": "org.springframework.samples.petclinic.system",
+      "imports": [
+        "org.assertj.core.api.Assertions.assertThat",
+        "org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT",
+        "java.util.List",
+        "java.util.Map",
+        "org.junit.jupiter.api.Test",
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.beans.factory.annotation.Value",
+        "org.springframework.boot.autoconfigure.SpringBootApplication",
+        "org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration",
+        "org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration",
+        "org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerAutoConfiguration",
+        "org.springframework.boot.resttestclient.TestRestTemplate",
+        "org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate",
+        "org.springframework.boot.test.context.SpringBootTest",
+        "org.springframework.core.ParameterizedTypeReference",
+        "org.springframework.http.HttpEntity",
+        "org.springframework.http.HttpHeaders",
+        "org.springframework.http.HttpMethod",
+        "org.springframework.http.HttpStatus",
+        "org.springframework.http.MediaType",
+        "org.springframework.http.RequestEntity",
+        "org.springframework.http.ResponseEntity"
+      ],
+      "classes": [
+        {
+          "name": "CrashControllerIntegrationTests",
+          "layer": "other",
+          "annotations": [
+            "AutoConfigureTestRestTemplate",
+            "SpringBootTest"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "port",
+              "type": "int",
+              "annotations": [
+                "Value"
+              ]
+            },
+            {
+              "name": "rest",
+              "type": "TestRestTemplate",
+              "annotations": [
+                "Autowired"
+              ]
+            }
+          ],
+          "methods": [
+            {
+              "name": "triggerExceptionJson",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "triggerExceptionHtml",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "TestConfiguration",
+          "layer": "other",
+          "annotations": [
+            "SpringBootApplication"
+          ],
+          "extends": null,
+          "fields": [],
+          "methods": []
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/model/ValidatorTests.java",
+      "package": "org.springframework.samples.petclinic.model",
+      "imports": [
+        "org.assertj.core.api.Assertions.assertThat",
+        "java.util.Locale",
+        "java.util.Set",
+        "org.junit.jupiter.api.Test",
+        "org.springframework.context.i18n.LocaleContextHolder",
+        "org.springframework.validation.beanvalidation.LocalValidatorFactoryBean",
+        "jakarta.validation.ConstraintViolation",
+        "jakarta.validation.Validator"
+      ],
+      "classes": [
+        {
+          "name": "ValidatorTests",
+          "layer": "other",
+          "annotations": [],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "createValidator",
+              "return_type": "Validator",
+              "parameters": [],
+              "annotations": []
+            },
+            {
+              "name": "shouldNotValidateWhenFirstNameEmpty",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/service/EntityUtils.java",
+      "package": "org.springframework.samples.petclinic.service",
+      "imports": [
+        "org.springframework.orm.ObjectRetrievalFailureException",
+        "org.springframework.samples.petclinic.model.BaseEntity",
+        "java.util.Collection"
+      ],
+      "classes": [
+        {
+          "name": "EntityUtils",
+          "layer": "other",
+          "annotations": [],
+          "extends": null,
+          "fields": [],
+          "methods": [
+            {
+              "name": "getById",
+              "return_type": "T",
+              "parameters": [
+                {
+                  "name": "entities",
+                  "type": "Collection<T>"
+                },
+                {
+                  "name": "entityClass",
+                  "type": "Class<T>"
+                },
+                {
+                  "name": "entityId",
+                  "type": "int"
+                }
+              ],
+              "annotations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java",
+      "package": "org.springframework.samples.petclinic.service",
+      "imports": [
+        "org.assertj.core.api.Assertions.assertThat",
+        "java.time.LocalDate",
+        "java.util.Collection",
+        "java.util.Optional",
+        "org.junit.jupiter.api.Test",
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest",
+        "org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase",
+        "org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace",
+        "org.springframework.data.domain.Page",
+        "org.springframework.data.domain.Pageable",
+        "org.springframework.samples.petclinic.owner.Owner",
+        "org.springframework.samples.petclinic.owner.OwnerRepository",
+        "org.springframework.samples.petclinic.owner.Pet",
+        "org.springframework.samples.petclinic.owner.PetType",
+        "org.springframework.samples.petclinic.owner.PetTypeRepository",
+        "org.springframework.samples.petclinic.owner.Visit",
+        "org.springframework.samples.petclinic.vet.Vet",
+        "org.springframework.samples.petclinic.vet.VetRepository",
+        "org.springframework.transaction.annotation.Transactional"
+      ],
+      "classes": [
+        {
+          "name": "ClinicServiceTests",
+          "layer": "other",
+          "annotations": [
+            "AutoConfigureTestDatabase",
+            "DataJpaTest"
+          ],
+          "extends": null,
+          "fields": [
+            {
+              "name": "owners",
+              "type": "OwnerRepository",
+              "annotations": [
+                "Autowired"
+              ]
+            },
+            {
+              "name": "types",
+              "type": "PetTypeRepository",
+              "annotations": [
+                "Autowired"
+              ]
+            },
+            {
+              "name": "vets",
+              "type": "VetRepository",
+              "annotations": [
+                "Autowired"
+              ]
+            },
+            {
+              "name": "pageable",
+              "type": "Pageable",
+              "annotations": []
+            }
+          ],
+          "methods": [
+            {
+              "name": "shouldFindOwnersByLastName",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "shouldFindSingleOwnerWithPet",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "shouldInsertOwner",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test",
+                "Transactional"
+              ]
+            },
+            {
+              "name": "shouldUpdateOwner",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test",
+                "Transactional"
+              ]
+            },
+            {
+              "name": "shouldFindAllPetTypes",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "shouldInsertPetIntoDatabaseAndGenerateId",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test",
+                "Transactional"
+              ]
+            },
+            {
+              "name": "shouldUpdatePetName",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test",
+                "Transactional"
+              ]
+            },
+            {
+              "name": "shouldFindVets",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            },
+            {
+              "name": "shouldAddNewVisitForPet",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test",
+                "Transactional"
+              ]
+            },
+            {
+              "name": "shouldFindVisitsByPetId",
+              "return_type": "void",
+              "parameters": [],
+              "annotations": [
+                "Test"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "file": "repo/spring-petclinic/src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+      "error": ""
+    }
+  ]
+}

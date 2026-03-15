@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+env/
+
+# AST output (generated files - optional to commit)
+# ast-output/
+
+# Cloned repo (don't push the analysed repo itself)
+repo/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
