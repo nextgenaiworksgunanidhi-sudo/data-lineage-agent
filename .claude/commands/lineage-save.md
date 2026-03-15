@@ -10,6 +10,13 @@ Step 1 - Apply orchestrator skill
   Parse the query. Extract attribute name, variants,
   direction and which scanners are needed.
 
+Step 1b - Apply cache-checker skill
+  Check lineage-results/ for an existing saved result.
+  Check ast-output/attribute-index.json for a fast lookup.
+  If [CACHE HIT]: show summary, ask user: cached or fresh?
+  If [INDEX HIT]: use index locations, skip Steps 2-5.
+  If [CACHE MISS]: proceed with full scan below.
+
 Step 2 - Apply db-scanner skill
   Scan repo/ for DB schema, JPA entities, SQL scripts.
   Find the attribute at the database layer.
