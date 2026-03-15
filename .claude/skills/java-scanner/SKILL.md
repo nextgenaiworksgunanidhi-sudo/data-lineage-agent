@@ -42,8 +42,22 @@ PRIORITY: Read ast-output/java-ast.json first.
    - If found: record controller class, HTTP method,
      URL path, and how the attribute enters/exits
 
+   BATCH LAYER — summary.batch_components[*]:
+   - Check all entries where batch_role is one of:
+       batch_reader    → reads rows containing the attribute
+       batch_processor → transforms the attribute between read and write
+       batch_writer    → writes rows containing the attribute
+       batch_scoped    → @JobScope/@StepScope bean that may pass attribute
+       batch_config    → @Bean method defining Step/Job/Tasklet
+   - For each reader: record class, implements[], fields that match attribute
+   - For each processor: note if attribute is transformed (renamed/computed)
+   - For each writer: record class, what it writes and to where
+   - For batch_config: trace which reader → processor → writer the Step wires together
+   - If batch_components is empty: state "No Spring Batch components found"
+     and continue — do NOT treat this as an error.
+
 2. For each match found, record:
-   - Layer: ENTITY | REPOSITORY | SERVICE | CONTROLLER
+   - Layer: ENTITY | REPOSITORY | SERVICE | CONTROLLER | BATCH
    - Class name and method or field name
    - Action: DEFINES | READS | WRITES | TRANSFORMS | PASSES
    - Where data comes from and where it goes next
@@ -67,4 +81,19 @@ PRIORITY: Read ast-output/java-ast.json first.
    DETAIL:   <any transformation or business logic note>
    ------------------------------------------
    (repeat for each finding)
+
+   (for batch components — add this block after regular findings)
+   ------------------------------------------
+   [BATCH LAYER]
+   ROLE:       READER | PROCESSOR | WRITER | SCOPED | CONFIG
+   CLASS:      <ClassName.java>
+   IMPLEMENTS: <ItemReader<X> | ItemProcessor<I,O> | ItemWriter<X>>
+   ACTION:     READS | TRANSFORMS | WRITES
+   FROM:       <data source — DB table, file, queue>
+   TO:         <next component in chain — processor or writer>
+   CHAIN:      <Reader → Processor → Writer if determinable from @Bean Step config>
+   TRANSFORM:  none | <description — e.g. maps firstName to fname>
+   ------------------------------------------
+   (if no batch components found)
+   [BATCH LAYER] No Spring Batch components found in repo.
    ==========================================

@@ -420,8 +420,8 @@
             "return_type": "Vets",
             "parameters": [],
             "annotations": [
-              "ResponseBody",
-              "GetMapping"
+              "GetMapping",
+              "ResponseBody"
             ],
             "http_method": "GET"
           }
@@ -912,7 +912,8 @@
           }
         ]
       }
-    ]
+    ],
+    "batch_components": []
   },
   "raw": [
     {
@@ -931,6 +932,9 @@
           "layer": "other",
           "annotations": [],
           "extends": null,
+          "implements": [
+            "RuntimeHintsRegistrar"
+          ],
           "fields": [],
           "methods": [
             {
@@ -977,6 +981,7 @@
             "SpringBootApplication"
           ],
           "extends": null,
+          "implements": [],
           "fields": [],
           "methods": [
             {
@@ -1022,6 +1027,7 @@
             "Table"
           ],
           "extends": "Person",
+          "implements": [],
           "fields": [
             {
               "name": "specialties",
@@ -1087,6 +1093,7 @@
             "Table"
           ],
           "extends": "NamedEntity",
+          "implements": [],
           "fields": [],
           "methods": [],
           "table_name": "specialties"
@@ -1115,6 +1122,7 @@
             "Controller"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "vetRepository",
@@ -1177,8 +1185,8 @@
               "return_type": "Vets",
               "parameters": [],
               "annotations": [
-                "ResponseBody",
-                "GetMapping"
+                "GetMapping",
+                "ResponseBody"
               ],
               "http_method": "GET"
             }
@@ -1251,6 +1259,7 @@
             "XmlRootElement"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "vets",
@@ -1306,6 +1315,7 @@
             "Table"
           ],
           "extends": "NamedEntity",
+          "implements": [],
           "fields": [
             {
               "name": "birthDate",
@@ -1419,6 +1429,7 @@
             "Controller"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "owners",
@@ -1525,6 +1536,9 @@
             "Component"
           ],
           "extends": null,
+          "implements": [
+            "Formatter"
+          ],
           "fields": [
             {
               "name": "types",
@@ -1651,6 +1665,7 @@
             "Controller"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "VIEWS_OWNER_CREATE_OR_UPDATE_FORM",
@@ -1912,6 +1927,7 @@
             "Controller"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "VIEWS_PETS_CREATE_OR_UPDATE_FORM",
@@ -2110,6 +2126,9 @@
           "layer": "other",
           "annotations": [],
           "extends": null,
+          "implements": [
+            "Validator"
+          ],
           "fields": [
             {
               "name": "REQUIRED",
@@ -2182,6 +2201,7 @@
             "Table"
           ],
           "extends": "Person",
+          "implements": [],
           "fields": [
             {
               "name": "address",
@@ -2375,6 +2395,7 @@
             "Table"
           ],
           "extends": "BaseEntity",
+          "implements": [],
           "fields": [
             {
               "name": "date",
@@ -2450,6 +2471,7 @@
             "Table"
           ],
           "extends": "NamedEntity",
+          "implements": [],
           "fields": [],
           "methods": [],
           "table_name": "types"
@@ -2477,6 +2499,7 @@
             "Controller"
           ],
           "extends": null,
+          "implements": [],
           "fields": [],
           "methods": [
             {
@@ -2512,6 +2535,7 @@
             "EnableCaching"
           ],
           "extends": null,
+          "implements": [],
           "fields": [],
           "methods": [
             {
@@ -2547,6 +2571,7 @@
             "Controller"
           ],
           "extends": null,
+          "implements": [],
           "fields": [],
           "methods": [
             {
@@ -2585,6 +2610,9 @@
             "SuppressWarnings"
           ],
           "extends": null,
+          "implements": [
+            "WebMvcConfigurer"
+          ],
           "fields": [],
           "methods": [
             {
@@ -2644,6 +2672,9 @@
             "MappedSuperclass"
           ],
           "extends": null,
+          "implements": [
+            "Serializable"
+          ],
           "fields": [
             {
               "name": "id",
@@ -2698,6 +2729,7 @@
             "MappedSuperclass"
           ],
           "extends": "BaseEntity",
+          "implements": [],
           "fields": [
             {
               "name": "firstName",
@@ -2777,6 +2809,7 @@
             "MappedSuperclass"
           ],
           "extends": "BaseEntity",
+          "implements": [],
           "fields": [
             {
               "name": "name",
@@ -2843,6 +2876,7 @@
             "SpringBootTest"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "port",
@@ -2936,13 +2970,14 @@
           "name": "MySqlIntegrationTests",
           "layer": "other",
           "annotations": [
-            "DisabledInAotMode",
-            "SpringBootTest",
-            "ActiveProfiles",
             "DisabledInNativeImage",
-            "Testcontainers"
+            "ActiveProfiles",
+            "Testcontainers",
+            "DisabledInAotMode",
+            "SpringBootTest"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "container",
@@ -3015,6 +3050,7 @@
             "Configuration"
           ],
           "extends": null,
+          "implements": [],
           "fields": [],
           "methods": [
             {
@@ -3022,9 +3058,9 @@
               "return_type": "MySQLContainer",
               "parameters": [],
               "annotations": [
-                "Bean",
+                "ServiceConnection",
                 "Profile",
-                "ServiceConnection"
+                "Bean"
               ]
             },
             {
@@ -3056,6 +3092,7 @@
           "layer": "other",
           "annotations": [],
           "extends": null,
+          "implements": [],
           "fields": [],
           "methods": [
             {
@@ -3098,11 +3135,12 @@
           "name": "VetControllerTests",
           "layer": "other",
           "annotations": [
-            "DisabledInNativeImage",
             "WebMvcTest",
+            "DisabledInNativeImage",
             "DisabledInAotMode"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "mockMvc",
@@ -3190,11 +3228,12 @@
           "name": "PetControllerTests",
           "layer": "other",
           "annotations": [
-            "DisabledInNativeImage",
             "WebMvcTest",
+            "DisabledInNativeImage",
             "DisabledInAotMode"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "TEST_OWNER_ID",
@@ -3326,6 +3365,7 @@
             "Nested"
           ],
           "extends": null,
+          "implements": [],
           "fields": [],
           "methods": [
             {
@@ -3377,6 +3417,7 @@
             "Nested"
           ],
           "extends": null,
+          "implements": [],
           "fields": [],
           "methods": [
             {
@@ -3439,11 +3480,12 @@
           "name": "OwnerControllerTests",
           "layer": "other",
           "annotations": [
-            "DisabledInNativeImage",
             "WebMvcTest",
+            "DisabledInNativeImage",
             "DisabledInAotMode"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "TEST_OWNER_ID",
@@ -3613,11 +3655,12 @@
           "name": "VisitControllerTests",
           "layer": "other",
           "annotations": [
-            "DisabledInNativeImage",
             "WebMvcTest",
+            "DisabledInNativeImage",
             "DisabledInAotMode"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "TEST_OWNER_ID",
@@ -3707,6 +3750,7 @@
             "ExtendWith"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "petValidator",
@@ -3794,6 +3838,7 @@
             "Nested"
           ],
           "extends": null,
+          "implements": [],
           "fields": [],
           "methods": [
             {
@@ -3852,6 +3897,7 @@
             "ExtendWith"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "types",
@@ -3922,6 +3968,7 @@
           "layer": "other",
           "annotations": [],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "testee",
@@ -3965,6 +4012,7 @@
           "layer": "other",
           "annotations": [],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "I18N_DIR",
@@ -4054,6 +4102,7 @@
             "SpringBootTest"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "port",
@@ -4096,6 +4145,7 @@
             "SpringBootApplication"
           ],
           "extends": null,
+          "implements": [],
           "fields": [],
           "methods": []
         }
@@ -4120,6 +4170,7 @@
           "layer": "other",
           "annotations": [],
           "extends": null,
+          "implements": [],
           "fields": [],
           "methods": [
             {
@@ -4154,6 +4205,7 @@
           "layer": "other",
           "annotations": [],
           "extends": null,
+          "implements": [],
           "fields": [],
           "methods": [
             {
@@ -4213,6 +4265,7 @@
             "DataJpaTest"
           ],
           "extends": null,
+          "implements": [],
           "fields": [
             {
               "name": "owners",
@@ -4263,8 +4316,8 @@
               "return_type": "void",
               "parameters": [],
               "annotations": [
-                "Test",
-                "Transactional"
+                "Transactional",
+                "Test"
               ]
             },
             {
@@ -4272,8 +4325,8 @@
               "return_type": "void",
               "parameters": [],
               "annotations": [
-                "Test",
-                "Transactional"
+                "Transactional",
+                "Test"
               ]
             },
             {
@@ -4289,8 +4342,8 @@
               "return_type": "void",
               "parameters": [],
               "annotations": [
-                "Test",
-                "Transactional"
+                "Transactional",
+                "Test"
               ]
             },
             {
@@ -4298,8 +4351,8 @@
               "return_type": "void",
               "parameters": [],
               "annotations": [
-                "Test",
-                "Transactional"
+                "Transactional",
+                "Test"
               ]
             },
             {
@@ -4315,8 +4368,8 @@
               "return_type": "void",
               "parameters": [],
               "annotations": [
-                "Test",
-                "Transactional"
+                "Transactional",
+                "Test"
               ]
             },
             {

@@ -1209,473 +1209,239 @@
       "tables_created": {},
       "inserts": [
         {
-          "table": "vets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "1",
-            "'James'",
-            "'Carter'"
-          ]
+          "values": []
         },
         {
-          "table": "vets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "2",
-            "'Helen'",
-            "'Leary'"
-          ]
+          "values": []
         },
         {
-          "table": "vets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "3",
-            "'Linda'",
-            "'Douglas'"
-          ]
+          "values": []
         },
         {
-          "table": "vets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "4",
-            "'Rafael'",
-            "'Ortega'"
-          ]
+          "values": []
         },
         {
-          "table": "vets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "5",
-            "'Henry'",
-            "'Stevens'"
-          ]
+          "values": []
         },
         {
-          "table": "vets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "6",
-            "'Sharon'",
-            "'Jenkins'"
-          ]
+          "values": []
         },
         {
-          "table": "specialties",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "1",
-            "'radiology'"
-          ]
+          "values": []
         },
         {
-          "table": "specialties",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "2",
-            "'surgery'"
-          ]
+          "values": []
         },
         {
-          "table": "specialties",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "3",
-            "'dentistry'"
-          ]
+          "values": []
         },
         {
-          "table": "vet_specialties",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "2",
-            "1"
-          ]
+          "values": []
         },
         {
-          "table": "vet_specialties",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "3",
-            "2"
-          ]
+          "values": []
         },
         {
-          "table": "vet_specialties",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "3",
-            "3"
-          ]
+          "values": []
         },
         {
-          "table": "vet_specialties",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "4",
-            "2"
-          ]
+          "values": []
         },
         {
-          "table": "vet_specialties",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "5",
-            "1"
-          ]
+          "values": []
         },
         {
-          "table": "types",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "1",
-            "'cat'"
-          ]
+          "values": []
         },
         {
-          "table": "types",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "2",
-            "'dog'"
-          ]
+          "values": []
         },
         {
-          "table": "types",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "3",
-            "'lizard'"
-          ]
+          "values": []
         },
         {
-          "table": "types",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "4",
-            "'snake'"
-          ]
+          "values": []
         },
         {
-          "table": "types",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "5",
-            "'bird'"
-          ]
+          "values": []
         },
         {
-          "table": "types",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "6",
-            "'hamster'"
-          ]
+          "values": []
         },
         {
-          "table": "owners",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "1",
-            "'George'",
-            "'Franklin'",
-            "'110 W. Liberty St.'",
-            "'Madison'",
-            "'6085551023'"
-          ]
+          "values": []
         },
         {
-          "table": "owners",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "2",
-            "'Betty'",
-            "'Davis'",
-            "'638 Cardinal Ave.'",
-            "'Sun Prairie'",
-            "'6085551749'"
-          ]
+          "values": []
         },
         {
-          "table": "owners",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "3",
-            "'Eduardo'",
-            "'Rodriquez'",
-            "'2693 Commerce St.'",
-            "'McFarland'",
-            "'6085558763'"
-          ]
+          "values": []
         },
         {
-          "table": "owners",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "4",
-            "'Harold'",
-            "'Davis'",
-            "'563 Friendly St.'",
-            "'Windsor'",
-            "'6085553198'"
-          ]
+          "values": []
         },
         {
-          "table": "owners",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "5",
-            "'Peter'",
-            "'McTavish'",
-            "'2387 S. Fair Way'",
-            "'Madison'",
-            "'6085552765'"
-          ]
+          "values": []
         },
         {
-          "table": "owners",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "6",
-            "'Jean'",
-            "'Coleman'",
-            "'105 N. Lake St.'",
-            "'Monona'",
-            "'6085552654'"
-          ]
+          "values": []
         },
         {
-          "table": "owners",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "7",
-            "'Jeff'",
-            "'Black'",
-            "'1450 Oak Blvd.'",
-            "'Monona'",
-            "'6085555387'"
-          ]
+          "values": []
         },
         {
-          "table": "owners",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "8",
-            "'Maria'",
-            "'Escobito'",
-            "'345 Maple St.'",
-            "'Madison'",
-            "'6085557683'"
-          ]
+          "values": []
         },
         {
-          "table": "owners",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "9",
-            "'David'",
-            "'Schroeder'",
-            "'2749 Blackhawk Trail'",
-            "'Madison'",
-            "'6085559435'"
-          ]
+          "values": []
         },
         {
-          "table": "owners",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "10",
-            "'Carlos'",
-            "'Estaban'",
-            "'2335 Independence La.'",
-            "'Waunakee'",
-            "'6085555487'"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "1",
-            "'Leo'",
-            "'2000-09-07'",
-            "1",
-            "1"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "2",
-            "'Basil'",
-            "'2002-08-06'",
-            "6",
-            "2"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "3",
-            "'Rosy'",
-            "'2001-04-17'",
-            "2",
-            "3"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "4",
-            "'Jewel'",
-            "'2000-03-07'",
-            "2",
-            "3"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "5",
-            "'Iggy'",
-            "'2000-11-30'",
-            "3",
-            "4"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "6",
-            "'George'",
-            "'2000-01-20'",
-            "4",
-            "5"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "7",
-            "'Samantha'",
-            "'1995-09-04'",
-            "1",
-            "6"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "8",
-            "'Max'",
-            "'1995-09-04'",
-            "1",
-            "6"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "9",
-            "'Lucky'",
-            "'1999-08-06'",
-            "5",
-            "7"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "10",
-            "'Mulligan'",
-            "'1997-02-24'",
-            "2",
-            "8"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "11",
-            "'Freddy'",
-            "'2000-03-09'",
-            "5",
-            "9"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "12",
-            "'Lucky'",
-            "'2000-06-24'",
-            "2",
-            "10"
-          ]
+          "values": []
         },
         {
-          "table": "pets",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "13",
-            "'Sly'",
-            "'2002-06-08'",
-            "1",
-            "10"
-          ]
+          "values": []
         },
         {
-          "table": "visits",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "1",
-            "7",
-            "'2010-03-04'",
-            "'rabies shot'"
-          ]
+          "values": []
         },
         {
-          "table": "visits",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "2",
-            "8",
-            "'2011-03-04'",
-            "'rabies shot'"
-          ]
+          "values": []
         },
         {
-          "table": "visits",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "3",
-            "8",
-            "'2009-06-04'",
-            "'neutered'"
-          ]
+          "values": []
         },
         {
-          "table": "visits",
+          "table": "IGNORE",
           "columns": [],
-          "values": [
-            "4",
-            "7",
-            "'2008-09-04'",
-            "'spayed'"
-          ]
+          "values": []
         }
       ],
       "updates": [],

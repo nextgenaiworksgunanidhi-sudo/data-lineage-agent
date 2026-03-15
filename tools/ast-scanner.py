@@ -37,6 +37,8 @@ OUT_DIR   = ROOT / "ast-output"
 JAVA_OUT  = OUT_DIR / "java-ast.json"
 SQL_OUT   = OUT_DIR / "sql-ast.json"
 
+PLPGSQL_OUT = OUT_DIR / "plpgsql-ast.json"
+
 OUT_DIR.mkdir(exist_ok=True)
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -51,6 +53,17 @@ SPRING_ANNOTATIONS = {
     "mapping":    {"RequestMapping", "GetMapping", "PostMapping",
                    "PutMapping", "DeleteMapping", "PatchMapping"},
 }
+
+# Spring Batch interface names (simple and generic forms)
+BATCH_READER_IFACES    = {"ItemReader", "ItemStreamReader", "FlatFileItemReader",
+                           "JdbcCursorItemReader", "JpaPagingItemReader",
+                           "JdbcPagingItemReader", "RepositoryItemReader"}
+BATCH_PROCESSOR_IFACES = {"ItemProcessor"}
+BATCH_WRITER_IFACES    = {"ItemWriter", "ItemStreamWriter", "FlatFileItemWriter",
+                           "JdbcBatchItemWriter", "JpaItemWriter",
+                           "RepositoryItemWriter"}
+BATCH_SCOPE_ANNOTATIONS = {"JobScope", "StepScope"}
+BATCH_RETURN_TYPES      = {"Step", "Job", "Tasklet", "Flow", "JobExecutionDecider"}
 
 
 def annotation_names(node) -> set:
@@ -105,14 +118,20 @@ def parse_java_file(path: Path) -> dict | None:
         ann_names = annotation_names(cls)
         layer = _detect_layer(ann_names)
 
+        implements_names = [i.name for i in (cls.implements or [])]
+        batch_role = _detect_batch_role(ann_names, implements_names)
+
         cls_info = {
             "name":        cls.name,
             "layer":       layer,
             "annotations": list(ann_names),
             "extends":     cls.extends.name if cls.extends else None,
+            "implements":  implements_names,
             "fields":      [],
             "methods":     [],
         }
+        if batch_role:
+            cls_info["batch_role"] = batch_role
 
         # ── @Entity / @Table details ──────────────────────────────────────
         if layer == "entity":
@@ -195,6 +214,14 @@ def parse_java_file(path: Path) -> dict | None:
                         for pair in el:
                             if hasattr(pair, "name") and pair.name == "value":
                                 m_info["query"] = pair.value.value.strip('"')
+                # @Bean returning a Spring Batch type → batch configuration
+                if ann.name == "Bean":
+                    ret = _type_name(method.return_type) if method.return_type else ""
+                    # strip generic: Step<X> → Step
+                    ret_base = ret.split("<")[0]
+                    if ret_base in BATCH_RETURN_TYPES:
+                        m_info["batch_role"]   = "batch_config"
+                        m_info["batch_type"]   = ret_base
 
             cls_info["methods"].append(m_info)
 
@@ -239,6 +266,30 @@ def parse_java_file(path: Path) -> dict | None:
         result["classes"].append(iface_info)
 
     return result
+
+
+def _detect_batch_role(ann_names: set, implements_names: list) -> str | None:
+    """
+    Return the Spring Batch role of a class, or None if it is not a batch component.
+    Checks both implements list (for reader/processor/writer) and
+    annotations (for @JobScope / @StepScope beans).
+    """
+    impl_set = set(implements_names)
+    if impl_set & BATCH_READER_IFACES or any(
+        i in name for name in implements_names for i in ("ItemReader",)
+    ):
+        return "batch_reader"
+    if impl_set & BATCH_PROCESSOR_IFACES or any(
+        "ItemProcessor" in name for name in implements_names
+    ):
+        return "batch_processor"
+    if impl_set & BATCH_WRITER_IFACES or any(
+        i in name for name in implements_names for i in ("ItemWriter",)
+    ):
+        return "batch_writer"
+    if ann_names & BATCH_SCOPE_ANNOTATIONS:
+        return "batch_scoped"
+    return None
 
 
 def _detect_layer(ann_names: set) -> str:
@@ -333,10 +384,11 @@ def scan_java(repo_root: Path) -> dict:
             }
 
     # build summary indices
-    entities     = []
-    repositories = []
-    services     = []
-    controllers  = []
+    entities          = []
+    repositories      = []
+    services          = []
+    controllers       = []
+    batch_components  = []   # readers, processors, writers, scoped beans, config
 
     for r in results:
         for cls in r.get("classes", []):
@@ -361,6 +413,32 @@ def scan_java(repo_root: Path) -> dict:
                 entry["methods"] = cls["methods"]
                 controllers.append(entry)
 
+            # ── Spring Batch: class-level reader / processor / writer ──────
+            batch_role = cls.get("batch_role")
+            if batch_role:
+                batch_components.append({
+                    "file":       r["file"],
+                    "class":      cls["name"],
+                    "batch_role": batch_role,
+                    "implements": cls.get("implements", []),
+                    "annotations": cls["annotations"],
+                    "fields":     cls.get("fields", []),
+                    "methods":    cls.get("methods", []),
+                })
+
+            # ── Spring Batch: @Bean methods that define Step / Job / Tasklet ─
+            for method in cls.get("methods", []):
+                if method.get("batch_role") == "batch_config":
+                    batch_components.append({
+                        "file":       r["file"],
+                        "class":      cls["name"],
+                        "batch_role": "batch_config",
+                        "batch_type": method.get("batch_type"),
+                        "method":     method["name"],
+                        "parameters": method.get("parameters", []),
+                        "annotations": cls["annotations"],
+                    })
+
     return {
         "meta": {
             "total_files_scanned": len(java_files),
@@ -368,10 +446,11 @@ def scan_java(repo_root: Path) -> dict:
             "parse_errors":        len(errors),
         },
         "summary": {
-            "entities":     entities,
-            "repositories": repositories,
-            "services":     services,
-            "controllers":  controllers,
+            "entities":         entities,
+            "repositories":     repositories,
+            "services":         services,
+            "controllers":      controllers,
+            "batch_components": batch_components,
         },
         "raw": results,
         "errors": errors,
@@ -382,34 +461,16 @@ def scan_java(repo_root: Path) -> dict:
 # SQL AST SCANNER
 # ════════════════════════════════════════════════════════════════════════════
 
-def _sql_dialect(path: Path) -> str:
-    """Detect sqlglot dialect from the file's parent folder name."""
-    parts = path.parts
-    for part in parts:
-        if part == "mysql":
-            return "mysql"
-        if part == "postgres":
-            return "postgres"
-    return "sqlite"   # H2 is closest to SQLite for sqlglot purposes
-
-
-def _preprocess_sql(source: str) -> str:
-    """Normalise MySQL-specific syntax that sqlglot can't handle."""
-    import re
-    # INSERT IGNORE INTO tbl  →  INSERT INTO tbl
-    source = re.sub(r'(?i)\bINSERT\s+IGNORE\s+INTO\b', 'INSERT INTO', source)
-    # INSERT IGNORE tbl  (without INTO)
-    source = re.sub(r'(?i)\bINSERT\s+IGNORE\b', 'INSERT INTO', source)
-    return source
+def _sql_dialect(_path: Path) -> str:
+    """Always use postgres — the canonical dialect for this scanner."""
+    return "postgres"
 
 
 def scan_sql_file(path: Path) -> dict:
-    """Parse one SQL file with sqlglot and extract schema + DML references."""
+    """Parse one SQL file with sqlglot (postgres dialect) and extract schema + DML references."""
     try:
         source = path.read_text(encoding="utf-8", errors="replace")
-        source = _preprocess_sql(source)
-        dialect = _sql_dialect(path)
-        statements = sqlglot.parse(source, dialect=dialect,
+        statements = sqlglot.parse(source, dialect="postgres",
                                    error_level=sqlglot.ErrorLevel.WARN)
     except Exception as e:
         return {"file": str(path.relative_to(ROOT)), "error": str(e)}
@@ -433,10 +494,18 @@ def scan_sql_file(path: Path) -> dict:
                 schema = stmt.find(exp.Schema)
                 if schema:
                     for col_def in schema.find_all(exp.ColumnDef):
+                        kind = col_def.args.get("kind")
+                        # Normalise SERIAL / BIGSERIAL / SMALLSERIAL display
+                        if kind and hasattr(kind, "this"):
+                            type_str = str(kind.this).upper()
+                            if type_str not in ("SERIAL", "BIGSERIAL", "SMALLSERIAL"):
+                                type_str = kind.sql(dialect="postgres")
+                        else:
+                            type_str = kind.sql(dialect="postgres") if kind else None
                         col_entry = {
                             "column": col_def.name,
-                            "type":   col_def.args.get("kind").sql() if col_def.args.get("kind") else None,
-                            "constraints": [c.sql() for c in col_def.find_all(exp.ColumnConstraint)],
+                            "type":   type_str,
+                            "constraints": [c.sql(dialect="postgres") for c in col_def.find_all(exp.ColumnConstraint)],
                         }
                         cols.append(col_entry)
                 tables_created[tbl_name] = {"columns": cols}
@@ -447,11 +516,17 @@ def scan_sql_file(path: Path) -> dict:
             cols = [c.name for c in stmt.find_all(exp.Column)]
             # values are literals — grab them as strings
             vals = [v.sql() for v in stmt.find_all(exp.Literal)]
-            inserts.append({
+            # PostgreSQL RETURNING clause
+            returning = stmt.args.get("returning")
+            returning_cols = [c.sql() for c in returning.find_all(exp.Column)] if returning else []
+            entry = {
                 "table":   tbl.name if tbl else None,
                 "columns": cols,
                 "values":  vals[:len(cols)] if cols else vals,
-            })
+            }
+            if returning_cols:
+                entry["returning"] = returning_cols
+            inserts.append(entry)
 
         # ── UPDATE ────────────────────────────────────────────────────────
         elif isinstance(stmt, exp.Update):
@@ -462,19 +537,30 @@ def scan_sql_file(path: Path) -> dict:
                 val = eq.right
                 if col:
                     sets.append({"column": col.name, "value": val.sql() if val else None})
-            updates.append({
+            # PostgreSQL RETURNING clause
+            returning = stmt.args.get("returning")
+            returning_cols = [c.sql() for c in returning.find_all(exp.Column)] if returning else []
+            entry = {
                 "table": tbl.name if tbl else None,
                 "sets":  sets,
-            })
+            }
+            if returning_cols:
+                entry["returning"] = returning_cols
+            updates.append(entry)
 
         # ── SELECT ────────────────────────────────────────────────────────
         elif isinstance(stmt, exp.Select):
             from_tables = [t.name for t in stmt.find_all(exp.Table)]
             sel_cols    = [c.sql() for c in stmt.find_all(exp.Column)]
-            selects.append({
+            # PostgreSQL $1, $2, ... parameter placeholders
+            placeholders = [p.sql(dialect="postgres") for p in stmt.find_all(exp.Placeholder)]
+            entry = {
                 "tables":  from_tables,
                 "columns": sel_cols,
-            })
+            }
+            if placeholders:
+                entry["parameters"] = placeholders
+            selects.append(entry)
 
     return {
         "file":           str(path.relative_to(ROOT)),
@@ -529,10 +615,143 @@ def scan_sql(repo_root: Path) -> dict:
 
 
 # ════════════════════════════════════════════════════════════════════════════
+# PL/pgSQL SCANNER
+# ════════════════════════════════════════════════════════════════════════════
+
+import re as _re
+
+
+def _parse_plpgsql_params(params_str: str) -> list:
+    """Parse a PL/pgSQL parameter list string into [{name, type}] dicts."""
+    params = []
+    for part in params_str.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        tokens = part.split()
+        # Drop IN / OUT / INOUT / VARIADIC mode keyword if present
+        if tokens and tokens[0].upper() in ("IN", "OUT", "INOUT", "VARIADIC"):
+            tokens = tokens[1:]
+        if len(tokens) >= 2:
+            params.append({"name": tokens[0], "type": " ".join(tokens[1:])})
+        elif len(tokens) == 1:
+            params.append({"name": "_", "type": tokens[0]})
+    return params
+
+
+def _scan_plpgsql_body(body: str) -> tuple:
+    """
+    Scan the body of a PL/pgSQL function for tables read and written.
+    Returns (reads: list[str], writes: list[dict]).
+    """
+    # Strip DECLARE section so we only look at the executable block
+    exec_block = _re.sub(r'(?is)^.*?BEGIN', '', body, count=1)
+    exec_block = _re.sub(r'(?is)\bEND\s*;?\s*$', '', exec_block)
+
+    reads  = []
+    writes = []
+
+    for m in _re.finditer(r'(?i)\bFROM\s+(\w+)', exec_block):
+        tbl = m.group(1).lower()
+        if tbl not in reads:
+            reads.append(tbl)
+
+    for m in _re.finditer(r'(?i)\bJOIN\s+(\w+)', exec_block):
+        tbl = m.group(1).lower()
+        if tbl not in reads:
+            reads.append(tbl)
+
+    for m in _re.finditer(r'(?i)\bINSERT\s+INTO\s+(\w+)', exec_block):
+        entry = {"table": m.group(1).lower(), "operation": "INSERT"}
+        if entry not in writes:
+            writes.append(entry)
+
+    for m in _re.finditer(r'(?i)\bUPDATE\s+(\w+)', exec_block):
+        entry = {"table": m.group(1).lower(), "operation": "UPDATE"}
+        if entry not in writes:
+            writes.append(entry)
+
+    for m in _re.finditer(r'(?i)\bDELETE\s+FROM\s+(\w+)', exec_block):
+        entry = {"table": m.group(1).lower(), "operation": "DELETE"}
+        if entry not in writes:
+            writes.append(entry)
+
+    return reads, writes
+
+
+def _extract_plpgsql_functions(source: str, path: Path) -> list:
+    """
+    Extract all PL/pgSQL FUNCTION and PROCEDURE definitions from SQL source.
+    Handles dollar-quoted bodies: AS $$ ... $$ or AS $body$ ... $body$.
+    """
+    results = []
+
+    # Match CREATE [OR REPLACE] FUNCTION|PROCEDURE name(params)
+    # then optionally RETURNS type, then AS $$body$$
+    header_pat = _re.compile(
+        r'CREATE\s+(?:OR\s+REPLACE\s+)?'
+        r'(?P<kind>FUNCTION|PROCEDURE)\s+'
+        r'(?P<name>\w+)\s*\((?P<params>[^)]*)\)'
+        r'(?:\s+RETURNS\s+(?P<returns>\S+))?'
+        r'.*?'
+        r'AS\s+(?P<dollar>\$\w*\$)'   # opening dollar-quote tag, e.g. $$ or $body$
+        ,
+        _re.IGNORECASE | _re.DOTALL,
+    )
+
+    for m in header_pat.finditer(source):
+        tag        = _re.escape(m.group("dollar"))   # e.g. \$\$ or \$body\$
+        body_start = m.end()
+        body_match = _re.search(tag, source[body_start:])
+        if not body_match:
+            continue   # unterminated dollar-quote — skip
+
+        body = source[body_start: body_start + body_match.start()]
+        reads, writes = _scan_plpgsql_body(body)
+
+        results.append({
+            "file":       str(path.relative_to(ROOT)),
+            "kind":       m.group("kind").upper(),
+            "name":       m.group("name"),
+            "parameters": _parse_plpgsql_params(m.group("params") or ""),
+            "returns":    (m.group("returns") or "void").strip(),
+            "reads":      reads,
+            "writes":     writes,
+        })
+
+    return results
+
+
+def scan_plpgsql(repo_root: Path) -> dict:
+    """Scan all .sql files in repo_root for PL/pgSQL function/procedure definitions."""
+    sql_files = list(repo_root.rglob("*.sql"))
+    functions = []
+    errors    = []
+
+    for sf in sql_files:
+        try:
+            source   = sf.read_text(encoding="utf-8", errors="replace")
+            found    = _extract_plpgsql_functions(source, sf)
+            functions.extend(found)
+        except Exception as e:
+            errors.append({"file": str(sf.relative_to(ROOT)), "error": str(e)})
+
+    return {
+        "meta": {
+            "total_files_scanned": len(sql_files),
+            "total_functions":     len(functions),
+            "parse_errors":        len(errors),
+        },
+        "functions": functions,
+        "errors":    errors,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
 # MAIN
 # ════════════════════════════════════════════════════════════════════════════
 
-def print_summary(java_data: dict, sql_data: dict) -> None:
+def print_summary(java_data: dict, sql_data: dict, plpgsql_data: dict) -> None:
     jm = java_data["meta"]
     sm = sql_data["meta"]
     js = java_data["summary"]
@@ -572,6 +791,25 @@ def print_summary(java_data: dict, sql_data: dict) -> None:
             if m.get("http_method"):
                 print(f"        {m['http_method']:8s} {m.get('path', '—'):40s} → {m['name']}()")
 
+    batch = js.get("batch_components", [])
+    print(f"\n  {'Batch Components':20s} {len(batch)}")
+    if batch:
+        for b in batch:
+            role = b.get("batch_role", "?")
+            if role == "batch_config":
+                print(f"    • [CONFIG]     {b['class']}.{b.get('method','?')}() → {b.get('batch_type','?')}")
+            else:
+                label = {
+                    "batch_reader":    "READER   ",
+                    "batch_processor": "PROCESSOR",
+                    "batch_writer":    "WRITER   ",
+                    "batch_scoped":    "SCOPED   ",
+                }.get(role, role.upper())
+                impls = ", ".join(b.get("implements", [])) or "—"
+                print(f"    • [{label}] {b['class']}  implements: {impls}")
+    else:
+        print("    (none found)")
+
     print(f"\n  SQL ({sm['total_files_scanned']} files, "
           f"{sm['total_parsed']} parsed, "
           f"{sm['parse_errors']} errors)")
@@ -583,9 +821,27 @@ def print_summary(java_data: dict, sql_data: dict) -> None:
     print(f"\n  INSERT statements:  {ss['insert_count']}")
     print(f"  UPDATE statements:  {ss['update_count']}")
     print(f"  SELECT statements:  {ss['select_count']}")
+
+    pm = plpgsql_data["meta"]
+    print(f"\n  PL/pgSQL ({pm['total_files_scanned']} files scanned, "
+          f"{pm['total_functions']} functions found, "
+          f"{pm['parse_errors']} errors)")
+    if plpgsql_data["functions"]:
+        for fn in plpgsql_data["functions"]:
+            params = ", ".join(f"{p['name']} {p['type']}" for p in fn["parameters"]) or "—"
+            print(f"    • {fn['kind']} {fn['name']}({params}) → {fn['returns']}")
+            if fn["reads"]:
+                print(f"        READS:  {', '.join(fn['reads'])}")
+            if fn["writes"]:
+                ops = ", ".join(f"{w['operation']} {w['table']}" for w in fn["writes"])
+                print(f"        WRITES: {ops}")
+    else:
+        print("    (none found — application uses JPA/ORM for all DB operations)")
+
     print(f"\n  Output written to:")
     print(f"    {JAVA_OUT}")
     print(f"    {SQL_OUT}")
+    print(f"    {PLPGSQL_OUT}")
     print("═" * 54 + "\n")
 
 
@@ -598,7 +854,11 @@ def main():
     sql_data = scan_sql(REPO)
     SQL_OUT.write_text(json.dumps(sql_data, indent=2, default=str), encoding="utf-8")
 
-    print_summary(java_data, sql_data)
+    print(f"Scanning PL/pgSQL functions in {REPO} …")
+    plpgsql_data = scan_plpgsql(REPO)
+    PLPGSQL_OUT.write_text(json.dumps(plpgsql_data, indent=2, default=str), encoding="utf-8")
+
+    print_summary(java_data, sql_data, plpgsql_data)
 
 
 if __name__ == "__main__":

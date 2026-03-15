@@ -18,6 +18,12 @@ Step 3 - Apply sql-scanner skill
   Scan repo/ for SQL files, stored procedures, triggers.
   Find the attribute in SQL logic layer.
 
+Step 3b - Apply plpgsql-scanner skill
+  Read ast-output/plpgsql-ast.json.
+  Find PL/pgSQL functions and procedures that read,
+  write, or transform the attribute. If no functions
+  exist in the repo, state that clearly and continue.
+
 Step 4 - Apply java-scanner skill
   Scan repo/ Java source for services, repositories,
   batch jobs that use the attribute.
