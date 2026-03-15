@@ -1,0 +1,11 @@
+{
+  "meta": {
+    "total_files_scanned": 47,
+    "total_mapstruct_mappers": 0,
+    "total_modelmapper_calls": 0,
+    "parse_errors": 0
+  },
+  "mappers": [],
+  "model_mapper_calls": [],
+  "errors": []
+}

@@ -28,6 +28,13 @@ Step 4 - Apply java-scanner skill
   Scan repo/ Java source for services, repositories,
   batch jobs that use the attribute.
 
+Step 4b - Apply mapper-scanner skill
+  Read ast-output/mapper-ast.json.
+  Find MapStruct @Mapper interfaces and ModelMapper
+  call sites where the attribute is renamed or
+  converted between DTOs and entities. If no mappers
+  exist in the repo, state that clearly and continue.
+
 Step 5 - Apply api-scanner skill
   Scan repo/ for REST controllers and forms that
   expose or receive the attribute.

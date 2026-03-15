@@ -38,6 +38,7 @@ JAVA_OUT  = OUT_DIR / "java-ast.json"
 SQL_OUT   = OUT_DIR / "sql-ast.json"
 
 PLPGSQL_OUT = OUT_DIR / "plpgsql-ast.json"
+MAPPER_OUT  = OUT_DIR / "mapper-ast.json"
 
 OUT_DIR.mkdir(exist_ok=True)
 
@@ -748,10 +749,233 @@ def scan_plpgsql(repo_root: Path) -> dict:
 
 
 # ════════════════════════════════════════════════════════════════════════════
+# MAPPER SCANNER  (MapStruct + ModelMapper)
+# ════════════════════════════════════════════════════════════════════════════
+
+def _annotation_attrs(ann) -> dict:
+    """
+    Return all key=value pairs from a javalang annotation element as a plain dict.
+    Handles both single-value and named-element forms.
+    """
+    attrs = {}
+    if ann.element is None:
+        return attrs
+    el = ann.element
+    if isinstance(el, list):
+        for pair in el:
+            if hasattr(pair, "name") and hasattr(pair, "value"):
+                v = pair.value
+                attrs[pair.name] = v.value.strip('"') if hasattr(v, "value") else str(v)
+    elif hasattr(el, "value"):
+        attrs["value"] = el.value.strip('"')
+    elif hasattr(el, "member"):
+        attrs["value"] = el.member
+    return attrs
+
+
+def _classify_transform(source_field: str, target_field: str,
+                         expression: str | None, qualified_by_name: str | None) -> str:
+    """Classify the mapping transform type from its attributes."""
+    if expression:
+        return "EXPRESSION"
+    if qualified_by_name:
+        return "CONVERT"
+    if source_field and target_field and source_field != target_field:
+        return "RENAME"
+    return "DIRECT"
+
+
+def _mappings_from_method(method, source_class: str, target_class: str) -> list:
+    """
+    Extract @Mapping entries from a single MapStruct method.
+    Handles both @Mapping (single) and @Mappings({@Mapping,...}) (repeated).
+    """
+    mappings = []
+    for ann in (method.annotations or []):
+        if ann.name == "Mapping":
+            attrs = _annotation_attrs(ann)
+            src   = attrs.get("source", "")
+            tgt   = attrs.get("target", "")
+            expr  = attrs.get("expression") or None
+            qbn   = attrs.get("qualifiedByName") or None
+            mappings.append({
+                "method":        method.name,
+                "source_class":  source_class,
+                "source_field":  src,
+                "target_class":  target_class,
+                "target_field":  tgt,
+                "expression":    expr,
+                "qualified_by_name": qbn,
+                "transform":     _classify_transform(src, tgt, expr, qbn),
+            })
+        # @Mappings wrapper — javalang flattens inner annotations into element list
+        elif ann.name == "Mappings" and ann.element:
+            inner = ann.element if isinstance(ann.element, list) else [ann.element]
+            for item in inner:
+                if hasattr(item, "name") and item.name == "Mapping":
+                    attrs = _annotation_attrs(item)
+                    src   = attrs.get("source", "")
+                    tgt   = attrs.get("target", "")
+                    expr  = attrs.get("expression") or None
+                    qbn   = attrs.get("qualifiedByName") or None
+                    mappings.append({
+                        "method":        method.name,
+                        "source_class":  source_class,
+                        "source_field":  src,
+                        "target_class":  target_class,
+                        "target_field":  tgt,
+                        "expression":    expr,
+                        "qualified_by_name": qbn,
+                        "transform":     _classify_transform(src, tgt, expr, qbn),
+                    })
+    return mappings
+
+
+def _scan_mapstruct_file(path: Path) -> dict | None:
+    """
+    Parse one .java file with javalang and extract MapStruct @Mapper interfaces.
+    Returns None if the file has no @Mapper interface.
+    """
+    try:
+        source = path.read_text(encoding="utf-8", errors="replace")
+        tree   = javalang.parse.parse(source)
+    except Exception:
+        return None
+
+    mappers = []
+    for _, iface in tree.filter(javalang.tree.InterfaceDeclaration):
+        ann_names = {a.name for a in (iface.annotations or [])}
+        if "Mapper" not in ann_names:
+            continue
+
+        # Collect all method-level @Mapping entries
+        all_mappings = []
+        for _, method in tree.filter(javalang.tree.MethodDeclaration):
+            # Determine source class (first parameter type) and target class (return type)
+            source_class = (
+                _type_name(method.parameters[0].type)
+                if method.parameters else "Unknown"
+            )
+            target_class = (
+                _type_name(method.return_type) if method.return_type else "Unknown"
+            )
+            all_mappings.extend(
+                _mappings_from_method(method, source_class, target_class)
+            )
+
+        mappers.append({
+            "file":     str(path.relative_to(ROOT)),
+            "class":    iface.name,
+            "kind":     "MapStruct",
+            "mappings": all_mappings,
+        })
+
+    return mappers if mappers else None
+
+
+def _scan_model_mapper_file(path: Path) -> list:
+    """
+    Regex-scan a Java source file for ModelMapper call sites:
+      - modelMapper.map(source, Target.class)
+      - modelMapper.typeMap(Source.class, Target.class)
+      - addMapping / addConverter patterns
+    """
+    try:
+        source = path.read_text(encoding="utf-8", errors="replace")
+    except Exception:
+        return []
+
+    calls = []
+    file_rel = str(path.relative_to(ROOT))
+
+    # .map(sourceVar, TargetClass.class)
+    for m in _re.finditer(r'\.map\s*\(\s*(\w+)\s*,\s*(\w+)\.class\s*\)', source):
+        calls.append({
+            "file":         file_rel,
+            "kind":         "ModelMapper.map()",
+            "source_var":   m.group(1),
+            "target_class": m.group(2),
+            "source_class": None,   # not statically determinable from call site alone
+            "source_field": None,
+            "target_field": None,
+            "transform":    "DIRECT",
+        })
+
+    # .typeMap(Source.class, Target.class)
+    for m in _re.finditer(
+        r'\.typeMap\s*\(\s*(\w+)\.class\s*,\s*(\w+)\.class\s*\)', source
+    ):
+        calls.append({
+            "file":         file_rel,
+            "kind":         "ModelMapper.typeMap()",
+            "source_class": m.group(1),
+            "target_class": m.group(2),
+            "source_var":   None,
+            "source_field": None,
+            "target_field": None,
+            "transform":    "DIRECT",
+        })
+
+    # .addMapping(src -> src.getField(), (dest, v) -> dest.setField(v))
+    for m in _re.finditer(
+        r'\.addMapping\s*\([^,]+?get(\w+)\s*\(\)[^,]*?,\s*[^,]+?set(\w+)\s*\(',
+        source,
+    ):
+        src_field = m.group(1)[0].lower() + m.group(1)[1:]   # getPhoneNumber → phoneNumber
+        tgt_field = m.group(2)[0].lower() + m.group(2)[1:]   # setTelephone   → telephone
+        calls.append({
+            "file":         file_rel,
+            "kind":         "ModelMapper.addMapping()",
+            "source_class": None,
+            "source_field": src_field,
+            "target_class": None,
+            "target_field": tgt_field,
+            "source_var":   None,
+            "transform":    "RENAME" if src_field != tgt_field else "DIRECT",
+        })
+
+    return calls
+
+
+def scan_mappers(repo_root: Path) -> dict:
+    """Walk all .java files and extract MapStruct and ModelMapper mapping definitions."""
+    java_files       = list(repo_root.rglob("*.java"))
+    mappers          = []
+    model_mapper_calls = []
+    errors           = []
+
+    for jf in java_files:
+        # MapStruct
+        try:
+            result = _scan_mapstruct_file(jf)
+            if result:
+                mappers.extend(result)
+        except Exception as e:
+            errors.append({"file": str(jf.relative_to(ROOT)), "error": str(e)})
+
+        # ModelMapper (regex — no parse needed)
+        calls = _scan_model_mapper_file(jf)
+        model_mapper_calls.extend(calls)
+
+    return {
+        "meta": {
+            "total_files_scanned":    len(java_files),
+            "total_mapstruct_mappers": len(mappers),
+            "total_modelmapper_calls": len(model_mapper_calls),
+            "parse_errors":           len(errors),
+        },
+        "mappers":             mappers,
+        "model_mapper_calls":  model_mapper_calls,
+        "errors":              errors,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
 # MAIN
 # ════════════════════════════════════════════════════════════════════════════
 
-def print_summary(java_data: dict, sql_data: dict, plpgsql_data: dict) -> None:
+def print_summary(java_data: dict, sql_data: dict,
+                  plpgsql_data: dict, mapper_data: dict) -> None:
     jm = java_data["meta"]
     sm = sql_data["meta"]
     js = java_data["summary"]
@@ -838,10 +1062,32 @@ def print_summary(java_data: dict, sql_data: dict, plpgsql_data: dict) -> None:
     else:
         print("    (none found — application uses JPA/ORM for all DB operations)")
 
+    mm = mapper_data["meta"]
+    print(f"\n  Mappers ({mm['total_files_scanned']} files, "
+          f"{mm['total_mapstruct_mappers']} MapStruct, "
+          f"{mm['total_modelmapper_calls']} ModelMapper calls, "
+          f"{mm['parse_errors']} errors)")
+    if mapper_data["mappers"]:
+        for mp in mapper_data["mappers"]:
+            print(f"    • [MapStruct] {mp['class']}  ({len(mp['mappings'])} mappings)")
+            for mapping in mp["mappings"]:
+                src = f"{mapping['source_class']}.{mapping['source_field']}"
+                tgt = f"{mapping['target_class']}.{mapping['target_field']}"
+                print(f"        {src:35s} → {tgt:35s}  [{mapping['transform']}]")
+    else:
+        print("    (no MapStruct mappers found)")
+    if mapper_data["model_mapper_calls"]:
+        print(f"    ModelMapper call sites: {len(mapper_data['model_mapper_calls'])}")
+        for c in mapper_data["model_mapper_calls"]:
+            print(f"        {c['kind']:30s}  {c.get('source_class') or c.get('source_var','?')} → {c.get('target_class','?')}")
+    else:
+        print("    (no ModelMapper calls found)")
+
     print(f"\n  Output written to:")
     print(f"    {JAVA_OUT}")
     print(f"    {SQL_OUT}")
     print(f"    {PLPGSQL_OUT}")
+    print(f"    {MAPPER_OUT}")
     print("═" * 54 + "\n")
 
 
@@ -858,7 +1104,11 @@ def main():
     plpgsql_data = scan_plpgsql(REPO)
     PLPGSQL_OUT.write_text(json.dumps(plpgsql_data, indent=2, default=str), encoding="utf-8")
 
-    print_summary(java_data, sql_data, plpgsql_data)
+    print(f"Scanning MapStruct/ModelMapper mappers in {REPO} …")
+    mapper_data = scan_mappers(REPO)
+    MAPPER_OUT.write_text(json.dumps(mapper_data, indent=2, default=str), encoding="utf-8")
+
+    print_summary(java_data, sql_data, plpgsql_data, mapper_data)
 
 
 if __name__ == "__main__":
