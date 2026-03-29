@@ -127,4 +127,6 @@ After generating all outputs, save them to disk:
    │ lineage-graph.txt      <size> KB                    │
    │ lineage.json           <size> KB                    │
    │ lineage-summary.txt    <size> KB                    │
+   │ lineage-matrix.csv     <size> KB  (Step 8)          │
+   │ openlineage.json       <size> KB  (Step 9)          │
    └─────────────────────────────────────────────────────┘

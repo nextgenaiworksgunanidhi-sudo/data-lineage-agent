@@ -34,6 +34,21 @@ STEP 4 — Apply transform-agent skill
 STEP 5 — Apply graph-output skill
 STEP 6 — Apply json-output skill
 STEP 7 — Apply report-output skill
-  Save all outputs to lineage-results/ folder
+  Save lineage-report.md, lineage-graph.txt,
+  lineage.json, lineage-summary.txt to lineage-results/ folder
+
+STEP 8 — Apply csv-output skill  (run after Step 7)
+  Produces lineage-matrix.csv — one row per hop
+  Columns: source_system, source_component, source_attribute,
+           target_system, target_component, target_attribute,
+           transformation, sensitive
+  Saves to same lineage-results/<attribute>_<timestamp>/ folder
+
+STEP 9 — Apply openlineage-output skill  (run after Step 7)
+  Produces openlineage.json — OpenLineage 1.0 spec format
+  Compatible with DataHub, Marquez, Atlan, Apache Atlas
+  Saves to same lineage-results/<attribute>_<timestamp>/ folder
+
+  Note: Steps 8 and 9 are independent — run both in parallel.
 
 Show progress as each agent and skill activates.
